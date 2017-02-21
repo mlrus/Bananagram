@@ -21,8 +21,8 @@ all:    $(DOTO) $(BINS) $(test_targets)
 banana:	$(DOTO)
 	$(CXX) $(CXXFLAGS) -o banana main.o Board.o Dictionary.o Place.o simple_utils.o
 
-run:	banana ../testdata/words.5letters
-	./banana -D 96 -n 21 -F ../testdata/words.5letters
+run:	banana ../TestData/words.5letters
+	./banana -D 96 -n 21 -F ../TestData/words.5letters
 
 .PHONY: doto
 doto:   $(DOTO)
