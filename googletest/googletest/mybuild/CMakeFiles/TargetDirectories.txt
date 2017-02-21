@@ -1,0 +1,2 @@
+/Users/mlrus/play/bananagram/googletest/googletest/mybuild/CMakeFiles/gtest.dir
+/Users/mlrus/play/bananagram/googletest/googletest/mybuild/CMakeFiles/gtest_main.dir

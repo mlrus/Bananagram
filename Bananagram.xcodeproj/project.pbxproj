@@ -3,15 +3,63 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02E7590F1E5CB0C9002B458F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02E7590E1E5CB0C9002B458F /* main.cpp */; };
+		021C72931E540850005970F0 /* libgtest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0266553D1E53C8ED006EF7DB /* libgtest.a */; };
+		021C72951E540907005970F0 /* SimpleTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 021C72941E540907005970F0 /* SimpleTest.cpp */; };
+		02204B4C1E550080009701E7 /* Place.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02204B4A1E550080009701E7 /* Place.cpp */; };
+		02204B4D1E5503C7009701E7 /* Place.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02204B4A1E550080009701E7 /* Place.cpp */; };
+		02204B4E1E5503D3009701E7 /* Place.h in Headers */ = {isa = PBXBuildFile; fileRef = 02204B4B1E550080009701E7 /* Place.h */; };
+		026655681E53D15A006EF7DB /* simple_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730ED21E4CC2F800214994 /* simple_utils.cpp */; };
+		026655691E53D15A006EF7DB /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDB1E4D740400214994 /* Dictionary.cpp */; };
+		0266556A1E53D15A006EF7DB /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDE1E4D76A800214994 /* Board.cpp */; };
+		0266556D1E53D182006EF7DB /* simple_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 02730ED31E4CC2F800214994 /* simple_utils.h */; };
+		0266556E1E53D182006EF7DB /* Dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 02730EDA1E4D73A500214994 /* Dictionary.h */; };
+		0266556F1E53D182006EF7DB /* defs.h in Headers */ = {isa = PBXBuildFile; fileRef = 02730EDD1E4D765700214994 /* defs.h */; };
+		026655701E53D182006EF7DB /* Board.h in Headers */ = {isa = PBXBuildFile; fileRef = 02730EDF1E4D76A800214994 /* Board.h */; };
+		026655791E53D576006EF7DB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 026655781E53D576006EF7DB /* main.cpp */; };
+		0266557F1E53D6AE006EF7DB /* libBananagram Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 026655631E53D12D006EF7DB /* libBananagram Library.a */; };
+		02730EC91E4A531900214994 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EC81E4A531900214994 /* main.cpp */; };
+		02730ED41E4CC2F800214994 /* simple_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730ED21E4CC2F800214994 /* simple_utils.cpp */; };
+		02730EDC1E4D740400214994 /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDB1E4D740400214994 /* Dictionary.cpp */; };
+		02730EE01E4D76A800214994 /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDE1E4D76A800214994 /* Board.cpp */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		021C728E1E5406C2005970F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 40C848F9101A209C0083642A;
+			remoteInfo = "gtest-static";
+		};
+		0266553C1E53C8ED006EF7DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C848FA101A209C0083642A;
+			remoteInfo = "gtest-static";
+		};
+		0266553E1E53C8ED006EF7DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C8490B101A217E0083642A;
+			remoteInfo = "gtest_main-static";
+		};
+		0266557D1E53D585006EF7DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 02730EBD1E4A531900214994 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 026655621E53D12D006EF7DB;
+			remoteInfo = "Bananagram Library";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		02E759091E5CB0C9002B458F /* CopyFiles */ = {
+		026655741E53D576006EF7DB /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -20,15 +68,61 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		02730ED61E4D0D4900214994 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = data;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		02E7590B1E5CB0C9002B458F /* Bananagram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Bananagram; sourceTree = BUILT_PRODUCTS_DIR; };
-		02E7590E1E5CB0C9002B458F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		021C728B1E53F5A2005970F0 /* shortWords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = shortWords; sourceTree = "<group>"; };
+		021C72941E540907005970F0 /* SimpleTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleTest.cpp; sourceTree = "<group>"; };
+		02204B4A1E550080009701E7 /* Place.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Place.cpp; sourceTree = "<group>"; };
+		02204B4B1E550080009701E7 /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gtest.xcodeproj; path = googletest/googletest/xcode/gtest.xcodeproj; sourceTree = "<group>"; };
+		026655631E53D12D006EF7DB /* libBananagram Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libBananagram Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		026655761E53D576006EF7DB /* SimpleTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SimpleTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		026655781E53D576006EF7DB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		026655821E53DEAD006EF7DB /* words */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words; sourceTree = "<group>"; };
+		026655831E53DEAD006EF7DB /* words.100 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.100; sourceTree = "<group>"; };
+		026655841E53DEAD006EF7DB /* words.5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.5; sourceTree = "<group>"; };
+		026655851E53DEAD006EF7DB /* words.5letters */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.5letters; sourceTree = "<group>"; };
+		026655861E53DEAD006EF7DB /* words.all */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.all; sourceTree = "<group>"; };
+		026655881E53E7DC006EF7DB /* shortWords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = shortWords; sourceTree = "<group>"; };
+		02730EC51E4A531900214994 /* bananagram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bananagram; sourceTree = BUILT_PRODUCTS_DIR; };
+		02730EC81E4A531900214994 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		02730ED21E4CC2F800214994 /* simple_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simple_utils.cpp; sourceTree = "<group>"; };
+		02730ED31E4CC2F800214994 /* simple_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simple_utils.h; sourceTree = "<group>"; };
+		02730EDA1E4D73A500214994 /* Dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = "<group>"; };
+		02730EDB1E4D740400214994 /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dictionary.cpp; sourceTree = "<group>"; };
+		02730EDD1E4D765700214994 /* defs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defs.h; sourceTree = "<group>"; };
+		02730EDE1E4D76A800214994 /* Board.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Board.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		02730EDF1E4D76A800214994 /* Board.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Board.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		02E759081E5CB0C9002B458F /* Frameworks */ = {
+		026655601E53D12D006EF7DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		026655731E53D576006EF7DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0266557F1E53D6AE006EF7DB /* libBananagram Library.a in Frameworks */,
+				021C72931E540850005970F0 /* libgtest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02730EC21E4A531900214994 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -38,95 +132,323 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		02E759021E5CB0C9002B458F = {
+		0266552F1E53C8ED006EF7DB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				02E7590D1E5CB0C9002B458F /* Bananagram */,
-				02E7590C1E5CB0C9002B458F /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		02E7590C1E5CB0C9002B458F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				02E7590B1E5CB0C9002B458F /* Bananagram */,
+				0266553D1E53C8ED006EF7DB /* libgtest.a */,
+				0266553F1E53C8ED006EF7DB /* libgtest_main.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		02E7590D1E5CB0C9002B458F /* Bananagram */ = {
+		026655771E53D576006EF7DB /* SimpleTest */ = {
 			isa = PBXGroup;
 			children = (
-				02E7590E1E5CB0C9002B458F /* main.cpp */,
+				026655781E53D576006EF7DB /* main.cpp */,
+				021C72941E540907005970F0 /* SimpleTest.cpp */,
 			);
-			path = Bananagram;
+			path = SimpleTest;
+			sourceTree = "<group>";
+		};
+		026655811E53DEAD006EF7DB /* testdata */ = {
+			isa = PBXGroup;
+			children = (
+				026655881E53E7DC006EF7DB /* shortWords */,
+				026655821E53DEAD006EF7DB /* words */,
+				026655831E53DEAD006EF7DB /* words.100 */,
+				026655841E53DEAD006EF7DB /* words.5 */,
+				026655851E53DEAD006EF7DB /* words.5letters */,
+				026655861E53DEAD006EF7DB /* words.all */,
+			);
+			path = testdata;
+			sourceTree = "<group>";
+		};
+		02730EBC1E4A531900214994 = {
+			isa = PBXGroup;
+			children = (
+				026655811E53DEAD006EF7DB /* testdata */,
+				0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */,
+				02730EC71E4A531900214994 /* bananagram */,
+				026655771E53D576006EF7DB /* SimpleTest */,
+				02730EC61E4A531900214994 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		02730EC61E4A531900214994 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				02730EC51E4A531900214994 /* bananagram */,
+				026655631E53D12D006EF7DB /* libBananagram Library.a */,
+				026655761E53D576006EF7DB /* SimpleTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		02730EC71E4A531900214994 /* bananagram */ = {
+			isa = PBXGroup;
+			children = (
+				02204B4A1E550080009701E7 /* Place.cpp */,
+				02204B4B1E550080009701E7 /* Place.h */,
+				021C728B1E53F5A2005970F0 /* shortWords */,
+				02730ED21E4CC2F800214994 /* simple_utils.cpp */,
+				02730ED31E4CC2F800214994 /* simple_utils.h */,
+				02730EC81E4A531900214994 /* main.cpp */,
+				02730EDA1E4D73A500214994 /* Dictionary.h */,
+				02730EDB1E4D740400214994 /* Dictionary.cpp */,
+				02730EDD1E4D765700214994 /* defs.h */,
+				02730EDE1E4D76A800214994 /* Board.cpp */,
+				02730EDF1E4D76A800214994 /* Board.h */,
+			);
+			path = bananagram;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		026655611E53D12D006EF7DB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02204B4E1E5503D3009701E7 /* Place.h in Headers */,
+				0266556D1E53D182006EF7DB /* simple_utils.h in Headers */,
+				0266556E1E53D182006EF7DB /* Dictionary.h in Headers */,
+				0266556F1E53D182006EF7DB /* defs.h in Headers */,
+				026655701E53D182006EF7DB /* Board.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		02E7590A1E5CB0C9002B458F /* Bananagram */ = {
+		026655621E53D12D006EF7DB /* Bananagram Library */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 02E759121E5CB0C9002B458F /* Build configuration list for PBXNativeTarget "Bananagram" */;
+			buildConfigurationList = 026655641E53D12D006EF7DB /* Build configuration list for PBXNativeTarget "Bananagram Library" */;
 			buildPhases = (
-				02E759071E5CB0C9002B458F /* Sources */,
-				02E759081E5CB0C9002B458F /* Frameworks */,
-				02E759091E5CB0C9002B458F /* CopyFiles */,
+				0266555F1E53D12D006EF7DB /* Sources */,
+				026655601E53D12D006EF7DB /* Frameworks */,
+				026655611E53D12D006EF7DB /* Headers */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Bananagram;
-			productName = Bananagram;
-			productReference = 02E7590B1E5CB0C9002B458F /* Bananagram */;
+			name = "Bananagram Library";
+			productName = "Bananagram Library";
+			productReference = 026655631E53D12D006EF7DB /* libBananagram Library.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		026655751E53D576006EF7DB /* SimpleTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0266557A1E53D576006EF7DB /* Build configuration list for PBXNativeTarget "SimpleTest" */;
+			buildPhases = (
+				026655721E53D576006EF7DB /* Sources */,
+				026655731E53D576006EF7DB /* Frameworks */,
+				026655741E53D576006EF7DB /* CopyFiles */,
+				026655801E53D70D006EF7DB /* Run Unit Tests */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				021C728F1E5406C2005970F0 /* PBXTargetDependency */,
+				0266557E1E53D585006EF7DB /* PBXTargetDependency */,
+			);
+			name = SimpleTest;
+			productName = SimpleTest;
+			productReference = 026655761E53D576006EF7DB /* SimpleTest */;
+			productType = "com.apple.product-type.tool";
+		};
+		02730EC41E4A531900214994 /* bananagram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02730ECC1E4A531900214994 /* Build configuration list for PBXNativeTarget "bananagram" */;
+			buildPhases = (
+				02730EC11E4A531900214994 /* Sources */,
+				02730EC21E4A531900214994 /* Frameworks */,
+				02730ED61E4D0D4900214994 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bananagram;
+			productName = bananagram;
+			productReference = 02730EC51E4A531900214994 /* bananagram */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		02E759031E5CB0C9002B458F /* Project object */ = {
+		02730EBD1E4A531900214994 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Michah Lerner";
 				TargetAttributes = {
-					02E7590A1E5CB0C9002B458F = {
+					026655621E53D12D006EF7DB = {
 						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					026655751E53D576006EF7DB = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					02730EC41E4A531900214994 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 4SN9U883NH;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 02E759061E5CB0C9002B458F /* Build configuration list for PBXProject "Bananagram" */;
-			compatibilityVersion = "Xcode 3.2";
+			buildConfigurationList = 02730EC01E4A531900214994 /* Build configuration list for PBXProject "bananagram" */;
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 02E759021E5CB0C9002B458F;
-			productRefGroup = 02E7590C1E5CB0C9002B458F /* Products */;
+			mainGroup = 02730EBC1E4A531900214994;
+			productRefGroup = 02730EC61E4A531900214994 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0266552F1E53C8ED006EF7DB /* Products */;
+					ProjectRef = 0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				02E7590A1E5CB0C9002B458F /* Bananagram */,
+				02730EC41E4A531900214994 /* bananagram */,
+				026655621E53D12D006EF7DB /* Bananagram Library */,
+				026655751E53D576006EF7DB /* SimpleTest */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		0266553D1E53C8ED006EF7DB /* libgtest.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgtest.a;
+			remoteRef = 0266553C1E53C8ED006EF7DB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0266553F1E53C8ED006EF7DB /* libgtest_main.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgtest_main.a;
+			remoteRef = 0266553E1E53C8ED006EF7DB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		026655801E53D70D006EF7DB /* Run Unit Tests */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/testdata/words",
+			);
+			name = "Run Unit Tests";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		02E759071E5CB0C9002B458F /* Sources */ = {
+		0266555F1E53D12D006EF7DB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02E7590F1E5CB0C9002B458F /* main.cpp in Sources */,
+				02204B4D1E5503C7009701E7 /* Place.cpp in Sources */,
+				026655681E53D15A006EF7DB /* simple_utils.cpp in Sources */,
+				026655691E53D15A006EF7DB /* Dictionary.cpp in Sources */,
+				0266556A1E53D15A006EF7DB /* Board.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		026655721E53D576006EF7DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				026655791E53D576006EF7DB /* main.cpp in Sources */,
+				021C72951E540907005970F0 /* SimpleTest.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02730EC11E4A531900214994 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02730EC91E4A531900214994 /* main.cpp in Sources */,
+				02204B4C1E550080009701E7 /* Place.cpp in Sources */,
+				02730ED41E4CC2F800214994 /* simple_utils.cpp in Sources */,
+				02730EE01E4D76A800214994 /* Board.cpp in Sources */,
+				02730EDC1E4D740400214994 /* Dictionary.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		021C728F1E5406C2005970F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "gtest-static";
+			targetProxy = 021C728E1E5406C2005970F0 /* PBXContainerItemProxy */;
+		};
+		0266557E1E53D585006EF7DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 026655621E53D12D006EF7DB /* Bananagram Library */;
+			targetProxy = 0266557D1E53D585006EF7DB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		02E759101E5CB0C9002B458F /* Debug */ = {
+		026655651E53D12D006EF7DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		026655661E53D12D006EF7DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		0266557B1E53D576006EF7DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = googletest/googletest/include;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0266557C1E53D576006EF7DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = googletest/googletest/include;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		02730ECA1E4A531900214994 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -135,6 +457,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_OPTIMIZATION_PROFILE_FILE = "";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -160,6 +483,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -173,7 +497,7 @@
 			};
 			name = Debug;
 		};
-		02E759111E5CB0C9002B458F /* Release */ = {
+		02730ECB1E4A531900214994 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -182,6 +506,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_OPTIMIZATION_PROFILE_FILE = "";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -201,6 +526,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -213,16 +539,20 @@
 			};
 			name = Release;
 		};
-		02E759131E5CB0C9002B458F /* Debug */ = {
+		02730ECD1E4A531900214994 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 4SN9U883NH;
+				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		02E759141E5CB0C9002B458F /* Release */ = {
+		02730ECE1E4A531900214994 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 4SN9U883NH;
+				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -230,24 +560,43 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		02E759061E5CB0C9002B458F /* Build configuration list for PBXProject "Bananagram" */ = {
+		026655641E53D12D006EF7DB /* Build configuration list for PBXNativeTarget "Bananagram Library" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				02E759101E5CB0C9002B458F /* Debug */,
-				02E759111E5CB0C9002B458F /* Release */,
+				026655651E53D12D006EF7DB /* Debug */,
+				026655661E53D12D006EF7DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		02E759121E5CB0C9002B458F /* Build configuration list for PBXNativeTarget "Bananagram" */ = {
+		0266557A1E53D576006EF7DB /* Build configuration list for PBXNativeTarget "SimpleTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				02E759131E5CB0C9002B458F /* Debug */,
-				02E759141E5CB0C9002B458F /* Release */,
+				0266557B1E53D576006EF7DB /* Debug */,
+				0266557C1E53D576006EF7DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		02730EC01E4A531900214994 /* Build configuration list for PBXProject "bananagram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				02730ECA1E4A531900214994 /* Debug */,
+				02730ECB1E4A531900214994 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		02730ECC1E4A531900214994 /* Build configuration list for PBXNativeTarget "bananagram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				02730ECD1E4A531900214994 /* Debug */,
+				02730ECE1E4A531900214994 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 02E759031E5CB0C9002B458F /* Project object */;
+	rootObject = 02730EBD1E4A531900214994 /* Project object */;
 }

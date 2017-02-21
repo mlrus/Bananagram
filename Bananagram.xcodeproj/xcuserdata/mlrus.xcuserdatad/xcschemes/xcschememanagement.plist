@@ -4,7 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Bananagram.xcscheme</key>
+		<key>Bananagram Library.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>SimpleTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>bananagram.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +22,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>02E7590A1E5CB0C9002B458F</key>
+		<key>026655531E53D069006EF7DB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>026655621E53D12D006EF7DB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>026655751E53D576006EF7DB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>02730EC41E4A531900214994</key>
 		<dict>
 			<key>primary</key>
 			<true/>
