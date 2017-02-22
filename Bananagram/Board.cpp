@@ -209,7 +209,7 @@ int Board::num_unplayed() const { return std::accumulate(unplayed.cbegin(),unpla
 
 bool Board::check_if_done() {
     if(num_unplayed()==0) {
-        cout << "\nSOLUTION " << *this << endl;
+        cout << *this << endl;
         return true;
     }
     return false;

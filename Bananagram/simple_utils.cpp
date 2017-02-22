@@ -83,16 +83,13 @@ std::ostream& operator<<(std::ostream& out, const Board& board) {
     int from_col = board.first_nonempty_col();
     int to_col = board.last_nonempty_col();
 
-    cout << "rows("<<from_row<<","<<to_row<<") X cols("<<from_col<<","<<to_col<<")\n";
+    cout << "\n";
     if(!board.empty()) {
-        out << "     | ";
-        for(int j = from_col; j <= to_col; j++)
-            out << std::setw(1) << j % 10;
         for(int i = from_row; i <= to_row; i++) {
-            out << "\n" << std::setw(4) << i << " | ";
             for(int j = from_col; j <= to_col; j++) {
                 out << board.board[i][j];
             }
+            cout << endl;
         }
     }
     if(board.num_unplayed()>0)
@@ -244,8 +241,8 @@ static /*const*/ std::vector<ushort> initial_counts({
 
 vector<char> initialize_tiles() {
     vector<char> tiles;
-    for(int i = 0; i < initial_counts.size(); i++) {
-        for(int j = 0; j < initial_counts[i]; j++)
+    for(unsigned long i = 0; i < initial_counts.size(); i++) {
+        for(unsigned long j = 0; j < initial_counts[i]; j++)
             tiles.push_back('A'+i);
     }
     unsigned long long seed = std::chrono::system_clock::now().time_since_epoch().count();

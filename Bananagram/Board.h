@@ -45,14 +45,14 @@ public:
     bool debug;
     
     Board(Dictionary& dictionary, const vector<char> & tiles, unsigned int d = 256, unsigned ntile = 12) :
-    dim(d),
-    numtiles(ntile),
     depth(0),
     board(vector<vector<char>>(d+1,vector<char>(d+1,'_'))),
     dictionary(dictionary),
     tiles(tiles),
-    debug(false),
-    unplayed(vector<int>(26, 0)) { }
+    unplayed(vector<int>(26, 0)),
+    dim(d),
+    numtiles(ntile),
+    debug(false) { }
     
     bool newsolve(deque<const Coord>&);
     bool peel(int n=12);
