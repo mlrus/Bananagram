@@ -1,4 +1,4 @@
-iBUILD_DIR = .
+BUILD_DIR = .
 OBJ_DIR = .
 ARCHFLAGS = -march=native
 CXX       = clang++ -std=c++11 -O3
@@ -8,7 +8,7 @@ EXTOPT    = -fvectorize -funroll-loops -fno-lax-vector-conversions -stdlib=libc+
 
 CXXFLAGS  = $(ARCHFLAGS) $(EXTOPT) -Wall -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -DDEBUG=$(DEBUG)
 
-headers = Util.h simple_utils.h
+HEADERS = Board.h Dictionary.h Place.h defs.h simple_utils.h
 
 DOTCPP = Board.cpp Dictionary.cpp Place.cpp simple_utils.cpp main.cpp
 
@@ -29,7 +29,7 @@ doto:   $(DOTO)
 
 #$(DOTO):        $(BUILD_DIR)/Env.mk
 
-$(DOTO): $(OBJ_DIR)/%.o:        %.cpp
+$(DOTO): $(OBJ_DIR)/%.o:        %.cpp $(HEADERS)
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 

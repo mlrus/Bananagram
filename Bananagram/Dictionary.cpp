@@ -11,8 +11,6 @@
 #include <chrono>
 #include <random>
 
-
-
 Dictionary::Dictionary() : words(), wordset() {}
 
 Dictionary::Dictionary(const string& filename) : words() {
@@ -34,27 +32,11 @@ void Dictionary::prepare(vector<string>& words) {
 void Dictionary::load(const string& filename) {
     rvec(filename, words);
     prepare(words);
-//    std::transform(words.begin(), words.end(), words.begin(),
-//                   [](string& s) { return toupper(s); });
-//    std::sort(words.begin(), words.end(), cmp);
-//    auto last = std::unique(words.begin(), words.end());
-//    words.erase(last, words.end());
-//    unsigned long long seed = std::chrono::system_clock::now().time_since_epoch().count();
-//    std::shuffle(words.begin(), words.end(), std::mt19937_64(seed));
-//    wordset.insert(words.begin(), words.end());
 }
 
 void Dictionary::add_words(const vector<string>& data) {
     std::copy(data.begin(), data.end(), back_inserter(words));
     prepare(words);
-//    std::transform(data.begin(), data.end(), back_inserter(words),
-//                   [](string s) { return toupper(s); });
-//    std::sort(words.begin(), words.end(), cmp);
-//    auto last = std::unique(words.begin(), words.end());
-//    words.erase(last, words.end());
-//    unsigned long long seed = std::chrono::system_clock::now().time_since_epoch().count();
-//    std::shuffle(words.begin(), words.end(), std::mt19937_64(seed));
-//    wordset.insert(words.begin(), words.end());
 }
 
 Dictionary::~Dictionary() {
