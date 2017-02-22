@@ -73,15 +73,14 @@ void Board::collect(Place p, const pair<int,int>& step, const string& word, char
         }
     }
     else {
-        string::const_reverse_iterator it = word.crbegin();
-        Place d(p+step);
-        it++;
-        for( ; tile_at(d) == POS_UNUSED && it != word.crend(); d+=step) {
-            if(*it++ == ch) {
-                result.push_back(p);
-            }
+        Place c(p);
+        for(string::const_iterator it = word.cbegin(); it != word.cend(); it++) {
+           if(tile_at(c) == POS_UNUSED || tile_at(c) == *it)
+             c+=step;
+           else
+             return;
         }
-        
+        result.push_back(p);
     }
 }
 
