@@ -1,8 +1,23 @@
 # bananagram
 
-1. Use `make` to build the executable from Bananagram
-1. Run from command line with `./banana -W cat,hat,hit,pat,sat,sit,vat -L CATSA`
-1. For options use `./banana -h`
+1. \*NIX
+```
+$ cd Bananagram
+$ make
+$ ./banana -h
+$ ./banana  -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P
+$ ./banana -F ../TestData/shuffledWords -n 21
+```
+1. MacOS
+```
+$ git clone https://github.com/mlrus/Bananagram.git
+$ xcodebuild -project Bananagram.xcodeproj/ -alltargets
+$ build/Release/SimpleTest
+$ build/Release/bananagram -h
+$ build/Release/bananagram -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P
+$ build/Release/bananagram -F TestData/shuffledWords -n 21
+$ build/Release/bananagram -F TestData/shuffledWords -n 21 -o 4 
+```
 
 Sample
 ```
@@ -48,3 +63,4 @@ $ ./banana -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P -o 4 | grep '#' | sort -
 ### __SIT:__A__:HAT__:
 $ 
 ```
+
