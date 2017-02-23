@@ -70,7 +70,7 @@ void Board::collect(Place p, const pair<int,int>& step, const string& word, char
             }
         }
     }
-    else{
+    else {
         string::const_reverse_iterator it = word.crbegin();
         Place d(p+step);
         it++;
@@ -140,9 +140,9 @@ bool Board::try_insert(const string& word, const Place& place, vector<const char
 bool
 Board::check_artifacts(char ch, const Place& place) const {
     Place::Direction perpendicular =
-    place.direction==Place::Direction::horizontal?
-    Place::Direction::vertical:
-    Place::Direction::horizontal;
+            place.direction==Place::Direction::horizontal?
+                Place::Direction::vertical:
+                Place::Direction::horizontal;
     
     Place loc(place.row,place.col,perpendicular);
     Place before = loc;
