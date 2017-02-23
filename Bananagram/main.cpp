@@ -44,17 +44,20 @@ void usage() {
     cout << "   -n ##       ! draw n tiles\n";
     cout << "   -F ##       ! dictionary filename\n";
     cout << "   -L letters  ! initial letters\n";
+    cout << "   -P          ! preserve order of dictionary\n";
+    cout << "   -p          ! do not preserve order or dictionary [default]\n";
 }
 
 int dim=256, tile_count=0;
 bool debug = false;
+bool preserve_order = true;
 string dict_filename;
 string initial_letters; // ("BASEDHABTEDIALFOROO");
 
 int parseargs(int argc, char * const argv[]) {
   
     int ch;
-    while ((ch = getopt(argc, argv, "?hdD:n:F:L:")) != -1) {
+    while ((ch = getopt(argc, argv, "?hdD:n:F:L:pP")) != -1) {
         switch(ch) {
             case '?':
             case 'h': usage();
@@ -68,6 +71,10 @@ int parseargs(int argc, char * const argv[]) {
             case 'F': dict_filename.assign(optarg);
                 break;
             case 'L': initial_letters.assign(optarg);
+                break;
+            case 'P': preserve_order = true;
+                break;
+            case 'p': preserve_order = false;
                 break;
             default:  cout << "Use: '" << argv[0] << "-?' for help\n";
                 return -1;
@@ -120,7 +127,7 @@ int main(int argc,  char * const argv[]) {
                 deque<const Coord> expand_from;
                 for(auto cap : uses)
                     expand_from.push_back(cap.second);
-                if(board.debug)cout << "Expand from " << expand_from << endl;
+                if(board.debug)cout << "\nExpand from\n" << expand_from << endl;
                 bool result = board.newsolve(expand_from);
                 if(result) numanswers++;
                 board.revert(uses);

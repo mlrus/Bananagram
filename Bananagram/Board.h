@@ -29,8 +29,7 @@ class Board {
     bool is_word_at(const string& word, const Place& place);
     bool check_artifacts(const char ch, const Place& place) const;
     
-    void collect(Place, const pair<int,int>&, const string&, char ch,
-                 deque<const Place>&, bool debug = false);
+    void collect(Place, const pair<int,int>&, const string&, char ch, deque<const Place>&);
     bool try_insert(const string& word, const Place& place,
                     vector<const char_at_pos>& uses);
     bool check_if_done();

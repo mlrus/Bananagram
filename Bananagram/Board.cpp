@@ -59,20 +59,18 @@ void Board::revert(vector<const char_at_pos>& uses) {
 }
 
 
-void Board::collect(Place p, const pair<int,int>& step, const string& word, char ch, deque<const Place>& result, bool debug) {
+void Board::collect(Place p, const pair<int,int>& step, const string& word, char ch, deque<const Place>& result) {
     if(step.first<0||step.second<0) {
         string::const_iterator it = word.cbegin();
         p+=step;
         it++;
         for( ; tile_at(p) == POS_UNUSED && it != word.cend(); p+=step) {
             if(*it++ == ch) {
-                if(debug)
-                    cout << "push_back("<<p<<")\n";
                 result.push_back(p);
             }
         }
     }
-    else {
+    else{
         string::const_reverse_iterator it = word.crbegin();
         Place d(p+step);
         it++;
@@ -81,7 +79,6 @@ void Board::collect(Place p, const pair<int,int>& step, const string& word, char
                 result.push_back(p);
             }
         }
-        
     }
 }
 
@@ -143,9 +140,9 @@ bool Board::try_insert(const string& word, const Place& place, vector<const char
 bool
 Board::check_artifacts(char ch, const Place& place) const {
     Place::Direction perpendicular =
-            place.direction==Place::Direction::horizontal?
-                Place::Direction::vertical:
-                Place::Direction::horizontal;
+    place.direction==Place::Direction::horizontal?
+    Place::Direction::vertical:
+    Place::Direction::horizontal;
     
     Place loc(place.row,place.col,perpendicular);
     Place before = loc;

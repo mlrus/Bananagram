@@ -33,16 +33,16 @@ class Dictionary {
         }
     } cmp;
     void prepare(vector<string>& words);
+    bool preserve_order;
 public:
     vector<string> words;
     unordered_set<string> wordset;
-    Dictionary();
-    Dictionary(const string&);
+    Dictionary(bool ordered=false) : preserve_order(ordered) {}
+    virtual ~Dictionary();
     void load(const string&);
     void add_words(const vector<string>&);
     unsigned long size() { return words.size(); }
     bool has(const string& word) const;
-    virtual ~Dictionary();
     void dump(ostream&);
 };
 

@@ -27,6 +27,8 @@
 #include "Board.h"
 #include "Place.h"
 
+#if 0
+
 TEST(DictionaryTest,CountsCorrectly) {
     Dictionary d;
     d.add_words({"one","two","three"});
@@ -177,21 +179,7 @@ TEST(board,accept) {
     
     cout << board;
 }
-
-
-Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO") {
-    int dim = 16;
-    Dictionary dictionary;
-    dictionary.add_words({"IF","AFT","ALOES","TEAR", "HIT","DO","FOE","BARD","DO","BASH","JOT",});
-    std::vector<char> tiles(initialize_tiles());
-    Board board(dictionary, tiles, dim);
-    vector<char>letters(tochar(letterstring));
-    if(!board.peel(letters)) {
-        cout << "Cannot assign the letters requested.\n";
-    }
-    return board;
-}
-
+#endif
 
 /*
  A*3 B*2 D*2 E*2 F*2 H*1 I*2 J*1 L*1 O*4 R*1 S*1 T*3
@@ -240,76 +228,121 @@ Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO") {
  
  */
 
+
+Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO",
+                   vector<string> vocab={"IF","AFT","ALOES","TEAR", "HIT","DO","FOE","BARD","DO","BASH","JOT"},
+                   int dim=16) {
+    cout << "=================\n";
+    Dictionary dictionary(false);
+    dictionary.add_words(vocab);
+    dictionary.dump(cout);
+    std::vector<char> tiles(initialize_tiles());
+    Board board(dictionary, tiles, dim);
+    board.debug = false;
+    if(!board.peel(tochar(letterstring))) {
+        cout << "Cannot assign the letters requested.\n";
+    }
+    return board;
+}
+
+
+bool run_board_test(Board& board, vector<pair<string,Coord>>& test_set, bool trace=false) {
+    vector<const char_at_pos>uses;
+    bool any = false;
+    int n = 0;
+    for(auto test : test_set) {
+        string word(test.first);
+        Coord coord(test.second);
+        if(trace) cout << "STEP " << setw(2) << ++n << ") word_starts(" << word << "," << coord << ")\n";
+        deque<const Place> res = board.word_starts(word,coord);
+        if(trace) cout << "collected:\n" << res;
+        int m = 0;
+        for(auto p : res) {
+            if(trace) cout << "  " << n << "." << ++m << " attempt insert("<<word<<","<<p<<") ";
+            bool ins = board.insert_word(word,p,uses);
+            any |= ins;
+            if(ins)
+                cout << "    [OK]  (|uses|=" << uses.size() << ")\n";
+            else
+                cout << "    [NIX] (|uses|=" << uses.size() << ")\n";
+            
+            if(!uses.empty()) cout << uses << endl;
+            cout << board << endl;
+        }
+    }
+    return any;
+}
+
+#if 0
 TEST(board,collect_a) {
-    string letterstring("BASEDHABITJOTTEDIALFFOROO");
-    Board board(define_board(letterstring));
+    Board board(define_board());
     vector<const char_at_pos> uses;
+    
     vector<pair<string,Coord>> test_set({
         {"ALOES",Coord(8,12)},
         { "AFT",Coord(8,11)},
         { "DO",Coord(6,12)} } );
-    board.debug = true;
-    
-    bool ins = board.insert_word("BASH",Place(8,10,Place::horizontal),uses);
-    ASSERT_EQ(ins,true);
-    cout << board << endl;
-   
-    for(auto test : test_set) {
-        string word(test.first);
-        Coord coord(test.second);
-        if(board.debug) cout << "Collect " << word << " from " << coord << endl;
-        deque<const Place> res = board.word_starts(word,coord);
-        if(board.debug)
-            cout << "collected: " << res << endl;
-        
-        bool any = false;
-        for(auto p : res) {
-            bool ins = board.insert_word(word,p,uses);
-            any |= ins;
-            if(ins) {
-                cout << "INSERTED " << word << " at " << p << endl;
-                cout << board << endl;
-            }
-            else
-                if(board.debug) cout << "skipping " << word << " at " << p << endl;
-        }
-        ASSERT_EQ(any,true);
-    }
-    board.revert(uses);
+
+    ASSERT_TRUE(board.insert_word("BASH",Place(8,10,Place::horizontal),uses));
+    ASSERT_TRUE(run_board_test(board, test_set));
 }
 
 TEST(board,collect_b) {
-    string letterstring("BASEDHABITJOTTEDIALFFOROO");
-    Board board(define_board(letterstring));
-    board.debug=false;
+    Board board(define_board());
     vector<const char_at_pos> uses;
     vector<pair<string,Coord>> test_set({
         { "ALOES",Coord(6,12)},
         { "BASH", Coord(8,12)},
         { "AFT",Coord(8,11)} });
 
-    bool ins = board.insert_word("DO",Place(6,11,Place::horizontal),uses);
-    ASSERT_EQ(ins,true);
+    ASSERT_TRUE(board.insert_word("DO",Place(6,11,Place::horizontal),uses));
+    cout << board;
+    ASSERT_TRUE(run_board_test(board, test_set, true));
+}
+
+TEST(board,fitting_001) {
+    {
+    Board board(define_board("TACAT",{"TAC","CAT"}));
+    vector<const char_at_pos> uses;
+    vector<pair<string,Coord>> test_set({
+        {"CAT",Coord(8,10)},
+        {"TAC",Coord(4,8)},
+    });
+    ASSERT_TRUE(board.insert_word("TAC",Place(8,8,Place::horizontal),uses));
     cout << board << endl;
-    
-    for(auto test : test_set) {
-        string word(test.first);
-        Coord coord(test.second);
-        if(board.debug) cout << "Collect " << word << " from " << coord << endl;
-        deque<const Place> res = board.word_starts(word,coord);
-        for(auto p : res) cout << "collect: " << p << endl;
-        bool any = false;
-        for(auto p : res) {
-            bool ins = board.insert_word(word,p,uses);
-            any |= ins;
-            if(ins) {
-                cout << "INSERTED " << word << " at " << p << endl;
-                cout << board << endl;
-            }
-            else
-                if(board.debug) cout << "skipping " << word << " at " << p << endl;
-        }
-        ASSERT_EQ(any,true);
+    ASSERT_TRUE(run_board_test(board, test_set, true));
+    cout << board << endl;
     }
-    board.revert(uses);
-  }
+    {
+    Board board(define_board("TACAT",{"CAT","TAC"}));
+    vector<const char_at_pos> uses;
+    vector<pair<string,Coord>> test_set({
+        {"CAT",Coord(8,10)},
+        {"TAC",Coord(4,8)},
+    });
+    ASSERT_TRUE(board.insert_word("TAC",Place(8,8,Place::horizontal),uses));
+    cout << board << endl;
+    ASSERT_TRUE(run_board_test(board, test_set, true));
+    cout << board << endl;
+    }
+}
+#endif
+
+
+TEST(board,fitting_002) {
+    Board board(define_board("CACAT",{"CAT","TAC"}));
+    cout << "board.debug=" << board.debug << endl;
+    vector<const char_at_pos> uses;
+    vector<pair<string,Coord>> test_set({
+        {"TAC",Coord(8,8)},
+        {"TAC",Coord(8,9)},
+        {"TAC",Coord(8,10)},
+        {"TAC",Coord(6,10)},
+        {"TAC",Coord(8,10)},
+        {"TAC",Coord(6,8)}
+    });
+    ASSERT_TRUE(board.insert_word("CAT",Place(8,8,Place::horizontal),uses));
+    cout << board << endl;
+    ASSERT_TRUE(run_board_test(board, test_set, true));
+    cout << board << endl;
+}

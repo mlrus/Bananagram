@@ -77,23 +77,48 @@ std::ostream& operator<<(std::ostream& out, const Place& place) {
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const Board& board) {
+std::ostream& operator<<(std::ostream& out, const Board& board)
+{
+    
     int from_row = board.first_nonempty_row();
     int to_row = board.last_nonempty_row();
     int from_col = board.first_nonempty_col();
     int to_col = board.last_nonempty_col();
-
-    cout << "\n";
+    
     if(!board.empty()) {
-        for(int i = from_row; i <= to_row; i++) {
-            for(int j = from_col; j <= to_col; j++) {
-                out << board.board[i][j];
+        cout << "\n";
+        if(!board.debug) {
+#if 1
+            for(int i = from_row; i <= to_row; i++) {
+                for(int j = from_col; j <= to_col; j++) {
+                    out << board.board[i][j];
+                }
+                cout << endl;
+            }
+#else
+            cout << "### ";
+            for(int i = from_row; i <= to_row; i++) {
+                for(int j = from_col; j <= to_col; j++) {
+                    out << board.board[i][j];
+                }
+                cout << ":";
             }
             cout << endl;
+#endif
+        } else {
+            out << "     | ";
+            for(int j = from_col; j <= to_col; j++)
+                out << std::setw(1) << j % 10;
+            for(int i = from_row; i <= to_row; i++) {
+                out << "\n" << std::setw(4) << i << " | ";
+                for(int j = from_col; j <= to_col; j++) {
+                    out << board.board[i][j];
+                }
+            }
+            if(board.num_unplayed()>0)
+                out << "\n" << board.num_unplayed() << " unplayed: " <<  board.show_unplayed() << endl;
         }
     }
-    if(board.num_unplayed()>0)
-        out << "\n" << board.num_unplayed() << " unplayed: " <<  board.show_unplayed() << endl;
     return out;
 }
 
