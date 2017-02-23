@@ -1,6 +1,6 @@
 # bananagram
 
-1. \*NIX
+## \*NIX
 ```
 $ cd Bananagram
 $ make
@@ -8,7 +8,8 @@ $ ./banana -h
 $ ./banana  -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P
 $ ./banana -F ../TestData/shuffledWords -n 21
 ```
-1. MacOS
+
+## MacOS
 ```
 $ git clone https://github.com/mlrus/Bananagram.git
 $ xcodebuild -project Bananagram.xcodeproj/ -alltargets
@@ -19,7 +20,7 @@ $ build/Release/bananagram -F TestData/shuffledWords -n 21
 $ build/Release/bananagram -F TestData/shuffledWords -n 21 -o 4 
 ```
 
-Sample
+## Sample
 ```
 $ ./banana -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P -o 5 
 debug=false; dim=256; tile_count=0; output_options=5
@@ -63,4 +64,5 @@ $ ./banana -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P -o 4 | grep '#' | sort -
 ### __SIT:__A__:HAT__:
 $ 
 ```
+
 
