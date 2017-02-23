@@ -27,8 +27,6 @@
 #include "Board.h"
 #include "Place.h"
 
-#if 0
-
 TEST(DictionaryTest,CountsCorrectly) {
     Dictionary d;
     d.add_words({"one","two","three"});
@@ -179,7 +177,6 @@ TEST(board,accept) {
     
     cout << board;
 }
-#endif
 
 /*
  A*3 B*2 D*2 E*2 F*2 H*1 I*2 J*1 L*1 O*4 R*1 S*1 T*3

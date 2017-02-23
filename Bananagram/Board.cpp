@@ -288,9 +288,9 @@ bool Board::peel(vector<char> letters) {
 }
 
 void Board::print(ostream& out) const {
-    if(0x01&output_options) print_std(out);
-    if(0x02&output_options) print_debug(out);
     if(0x04&output_options) print_machine(out);
+    if(0x02&output_options) print_debug(out);
+    if(0x01&output_options) print_std(out);
 }
 
 void Board::print_std(ostream& out) const {
@@ -332,7 +332,7 @@ void Board::print_debug(ostream& out) const {
         int to_row = last_nonempty_row();
         int from_col = first_nonempty_col();
         int to_col = last_nonempty_col();
-        out << "\n\n     | ";
+        out << "     | ";
         for(int j = from_col; j <= to_col; j++)
             out << std::setw(1) << (j/10)%10;
         out << "\n     | ";
@@ -347,5 +347,5 @@ void Board::print_debug(ostream& out) const {
         if(num_unplayed()>0)
             out << "\n" << num_unplayed() << " unplayed: " <<  show_unplayed() << endl;
         }
-        out << endl;
+        out << "\n\n";
 }
