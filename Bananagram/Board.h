@@ -17,6 +17,7 @@
 
 
 class Board {
+public:
     int depth;
     vector<vector<char>> board;
     const Dictionary& dictionary;
@@ -41,7 +42,13 @@ public:
     static const Place::Direction horz = Place::Direction::horizontal;
     const unsigned int dim;
     const unsigned int numtiles;
+    unsigned int output_options;
     bool debug;
+
+    void print(ostream& where) const;
+    void print_std(ostream& where) const;
+    void print_machine(ostream& where) const;
+    void print_debug(ostream& where) const;
     
     Board(Dictionary& dictionary, const vector<char> & tiles, unsigned int d = 256, unsigned ntile = 12) :
     depth(0),
@@ -51,6 +58,7 @@ public:
     unplayed(vector<int>(26, 0)),
     dim(d),
     numtiles(ntile),
+    output_options(1),
     debug(false) { }
     
     bool newsolve(deque<const Coord>&);

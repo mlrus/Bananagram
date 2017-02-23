@@ -77,48 +77,20 @@ std::ostream& operator<<(std::ostream& out, const Place& place) {
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const Board& board)
-{
-    
-    int from_row = board.first_nonempty_row();
-    int to_row = board.last_nonempty_row();
-    int from_col = board.first_nonempty_col();
-    int to_col = board.last_nonempty_col();
-    
-    if(!board.empty()) {
-        cout << "\n";
-        if(!board.debug) {
-#if 1
-            for(int i = from_row; i <= to_row; i++) {
-                for(int j = from_col; j <= to_col; j++) {
-                    out << board.board[i][j];
-                }
-                cout << endl;
+std::ostream& operator<<(std::ostream& out, const Board& board) {
+    if(!board.empty())
+        {
+        int from_row = board.first_nonempty_row();
+        int to_row = board.last_nonempty_row();
+        int from_col = board.first_nonempty_col();
+        int to_col = board.last_nonempty_col();
+        for(int i = from_row; i <= to_row; i++) {
+            for(int j = from_col; j <= to_col; j++) {
+                out << board.board[i][j];
             }
-#else
-            cout << "### ";
-            for(int i = from_row; i <= to_row; i++) {
-                for(int j = from_col; j <= to_col; j++) {
-                    out << board.board[i][j];
-                }
-                cout << ":";
-            }
-            cout << endl;
-#endif
-        } else {
-            out << "     | ";
-            for(int j = from_col; j <= to_col; j++)
-                out << std::setw(1) << j % 10;
-            for(int i = from_row; i <= to_row; i++) {
-                out << "\n" << std::setw(4) << i << " | ";
-                for(int j = from_col; j <= to_col; j++) {
-                    out << board.board[i][j];
-                }
-            }
-            if(board.num_unplayed()>0)
-                out << "\n" << board.num_unplayed() << " unplayed: " <<  board.show_unplayed() << endl;
+            out << endl;
         }
-    }
+        }
     return out;
 }
 
@@ -251,7 +223,7 @@ using std::endl;
 void showargs(int argc, char * const argv[]) {
     cout << "running from " << getCwd() << "\n";
     for(int i=0;i<argc;i++)
-        cout << "arg" << i << " : " << argv[i] << "\n";
+        cout << argv[i] << " ";
     cout << endl;
 }
 

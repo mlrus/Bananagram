@@ -8,6 +8,7 @@
 
 #include <numeric>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include "Board.h"
 #include "Place.h"
@@ -140,9 +141,9 @@ bool Board::try_insert(const string& word, const Place& place, vector<const char
 bool
 Board::check_artifacts(char ch, const Place& place) const {
     Place::Direction perpendicular =
-            place.direction==Place::Direction::horizontal?
-                Place::Direction::vertical:
-                Place::Direction::horizontal;
+    place.direction==Place::Direction::horizontal?
+    Place::Direction::vertical:
+    Place::Direction::horizontal;
     
     Place loc(place.row,place.col,perpendicular);
     Place before = loc;
@@ -206,7 +207,7 @@ int Board::num_unplayed() const { return std::accumulate(unplayed.cbegin(),unpla
 
 bool Board::check_if_done() {
     if(num_unplayed()==0) {
-        cout << *this << endl;
+        print(cout);
         return true;
     }
     return false;
@@ -286,5 +287,65 @@ bool Board::peel(vector<char> letters) {
     return true;
 }
 
+void Board::print(ostream& out) const {
+    if(0x01&output_options) print_std(out);
+    if(0x02&output_options) print_debug(out);
+    if(0x04&output_options) print_machine(out);
+}
 
+void Board::print_std(ostream& out) const {
+    if(!empty()) {
+        int from_row = first_nonempty_row();
+        int to_row = last_nonempty_row();
+        int from_col = first_nonempty_col();
+        int to_col = last_nonempty_col();
+        for(int i = from_row; i <= to_row; i++) {
+            for(int j = from_col; j <= to_col; j++) {
+                out << this->board[i][j];
+            }
+            out << endl;
+        }
+    }
+    out << endl;
+}
 
+void Board::print_machine(ostream& out) const {
+    if(!empty()) {
+        int from_row = first_nonempty_row();
+        int to_row = last_nonempty_row();
+        int from_col = first_nonempty_col();
+        int to_col = last_nonempty_col();
+        out << "### ";
+        for(int i = from_row; i <= to_row; i++) {
+            for(int j = from_col; j <= to_col; j++) {
+                out << board[i][j];
+            }
+            out << ":";
+        }
+        out << endl;
+        }
+}
+
+void Board::print_debug(ostream& out) const {
+    if(!empty()) {
+        int from_row = first_nonempty_row();
+        int to_row = last_nonempty_row();
+        int from_col = first_nonempty_col();
+        int to_col = last_nonempty_col();
+        out << "\n\n     | ";
+        for(int j = from_col; j <= to_col; j++)
+            out << std::setw(1) << (j/10)%10;
+        out << "\n     | ";
+        for(int j = from_col; j <= to_col; j++)
+            out << std::setw(1) << j % 10;
+        for(int i = from_row; i <= to_row; i++) {
+            out << "\n" << std::setw(4) << i << " | ";
+            for(int j = from_col; j <= to_col; j++) {
+                out << Board::board[i][j];
+            }
+        }
+        if(num_unplayed()>0)
+            out << "\n" << num_unplayed() << " unplayed: " <<  show_unplayed() << endl;
+        }
+        out << endl;
+}
