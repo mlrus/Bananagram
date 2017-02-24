@@ -157,14 +157,31 @@ int main(int argc,  char * const argv[]) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.second);
-            if(board.debug)cout << "\nExpand from\n" << expand_from << endl;
+            //if(board.debug)
+                cout << "\nExpand from " << word << "\n" << expand_from << endl;
             bool result = board.newsolve(expand_from);
             if(result) numanswers++;
             board.revert(uses);
             
         }
     }
-    cout << "Computed " << numanswers << " results for: " << unplayed << endl;
+
+    sort(board.collected_results.begin(),board.collected_results.end());
+    for(auto r : board.collected_results) cout << " " << r;
+    auto last = unique(board.collected_results.begin(),board.collected_results.end());
+    board.collected_results.erase(last,board.collected_results.end());
+    
+    cout << "#unique="<<board.collected_results.size()<<"; "
+    << "#computed="<<board.numresults<<"; "
+    << "#starts="<<numanswers
+    << " for " << unplayed << endl;
+    
+    for(auto r : board.collected_results) cout << r;
+    
+    cout << "#unique="<<board.collected_results.size()<<"; "
+    << "#computed="<<board.numresults<<"; "
+    << "#starts="<<numanswers
+    << " for " << unplayed << endl;
     
     return 0;
 }

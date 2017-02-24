@@ -35,7 +35,7 @@ std::ostream& operator<<(std::ostream& out, const vector<const Place>& vec) {
     return out;
 }
 std::ostream& operator<<(std::ostream& out, const deque<const Coord>& vec) {
-    for(deque<const Coord>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << endl;
+    for(deque<const Coord>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << "; ";
     return out;
 }
 std::ostream& operator<<(std::ostream& out, const vector<vector<char>>& vec) {
@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& out, const vector<vector<char>>& vec) {
     return out;
 }
 std::ostream& operator<<(std::ostream& out, const deque<const Place>& vec) {
-    for(deque<const Place>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << endl;
+    for(deque<const Place>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << "; ";
     return out;
 }
 std::ostream& operator<<(std::ostream& out, const vector<const char_at_pos>& vec) {

@@ -43,6 +43,8 @@ public:
     const unsigned int dim;
     const unsigned int numtiles;
     unsigned int output_options;
+    int numresults;
+    deque<string> collected_results;
     bool debug;
 
     void print(ostream& where) const;
@@ -59,6 +61,7 @@ public:
     dim(d),
     numtiles(ntile),
     output_options(1),
+    numresults(0),
     debug(false) { }
     
     bool newsolve(deque<const Coord>&);

@@ -18,31 +18,49 @@ using namespace std;
 
 
 bool Board::newsolve(deque<const Coord> &expanders) {
+    depth++;
+    cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders: " << expanders << endl;
     if(check_if_done()) {
         depth--;
         return true;
     }
-    depth++;
     vector<const char_at_pos> uses;
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
+        cout << "DEPTH " << depth << " expander=" << coord << "\n";
         for(auto word : dictionary.words) {
             deque<const Place> new_expandables = word_starts(word,coord);
-            if(!new_expandables.empty())
+            if(!new_expandables.empty()) {
                 for(const Place expand_at : new_expandables) {
                     if(insert_word(word, expand_at, uses)) {
-                        // re-expand just-added and not-yet-consumed.
-                        deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
-                        for(const char_at_pos cap : uses) // letters just added
-                            expand_again.push_front(cap.second);
-                        newsolve(expand_again);
+                        if(!check_if_done()) {
+                            deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
+                            for(const char_at_pos cap : uses) // letters just added
+                                expand_again.push_front(cap.second);
+                            bool rc = newsolve(expand_again);
+                        }
                         revert(uses);
                     }
                 }
+            }
         }
     }
+    depth--;
     return true;
+}
+
+bool Board::check_if_done() {
+    if(num_unplayed()==0) {
+        ostringstream ostr;
+        print_machine(ostr);
+        collected_results.push_back(ostr.str());
+        numresults++;
+        cout << "DEPTH " << depth << ": solution found (" << numresults << "): " << ostr.str();
+        print_debug(cout);
+        return true;
+    }
+    return false;
 }
 
 void Board::revert(vector<const char_at_pos>& uses) {
@@ -205,15 +223,6 @@ const string Board::show_unplayed() const {
 
 int Board::num_unplayed() const { return std::accumulate(unplayed.cbegin(),unplayed.cend(),0); }
 
-bool Board::check_if_done() {
-    if(num_unplayed()==0) {
-        print(cout);
-        return true;
-    }
-    return false;
-}
-
-
 bool Board::empty_row(int i) const {
     for(int j=0; j < dim; j++)
         if(board[i][j] != POS_UNUSED)
@@ -323,7 +332,7 @@ void Board::print_machine(ostream& out) const {
             out << ":";
         }
         out << endl;
-        }
+    }
 }
 
 void Board::print_debug(ostream& out) const {
@@ -346,6 +355,6 @@ void Board::print_debug(ostream& out) const {
         }
         if(num_unplayed()>0)
             out << "\n" << num_unplayed() << " unplayed: " <<  show_unplayed() << endl;
-        }
-        out << "\n\n";
+    }
+    out << "\n\n";
 }
