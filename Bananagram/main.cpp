@@ -60,13 +60,14 @@ void usage(char *cmd) {
     cout << "   -o #        | output options (001=normal|010=debug|100=machine)\n";
 }
 
-int dim=256, tile_count=0;
-bool debug = false;
-bool preserve_order = false;
-bool shuffle_words = false;
-unsigned output_options = 1;
+int dim=256,
+    tile_count=21,
+    output_options = 1;
+bool debug = false,
+    preserve_order = false,
+    shuffle_words = false;
 string dict_filename;
-string dict_words;  // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
+string dict_words;      // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
 string initial_letters; // BASEDHABTEDIALFOROO
 int parseargs(int argc, char * const argv[]) {
     int ch;
@@ -148,9 +149,6 @@ int main(int argc,  char * const argv[]) {
             return 1;
         }
     
-    if(debug)
-        dictionary.dump(cout);
-    
     const Place start = Place(dim/2, dim/2, Place::Direction::horizontal);
 
     int numanswers = 0;
@@ -163,7 +161,7 @@ int main(int argc,  char * const argv[]) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.second);
-            //if(board.debug)
+            if(board.debug)
                 cout << "\nExpand from " << word << "\n" << expand_from << endl;
             bool result = board.newsolve(expand_from);
             if(result) numanswers++;

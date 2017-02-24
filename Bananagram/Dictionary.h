@@ -26,7 +26,7 @@ using std::unordered_set;
 class Dictionary {
     struct {
         bool operator()(const string& a, const string& b) {
-            long s = a.size() - b.size();
+            long s = b.size() - a.size();
             if(s<0) return true;
             if(s>0) return false;
             return a.compare(b);
@@ -34,10 +34,11 @@ class Dictionary {
     } cmp;
     void prepare(vector<string>& words);
     bool preserve_order;
+    bool shuffle_words;
 public:
     vector<string> words;
     unordered_set<string> wordset;
-    Dictionary(bool ordered=false) : preserve_order(ordered) {}
+    Dictionary(bool ordered=false, bool shuffled=true) : preserve_order(ordered), shuffle_words(shuffled) {}
     virtual ~Dictionary();
     void load(const string&);
     void add_words(const vector<string>&);

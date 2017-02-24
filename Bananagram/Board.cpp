@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <stdexcept>
 #include "Board.h"
 #include "Place.h"
 #include "simple_utils.h"
@@ -18,7 +19,7 @@ using namespace std;
 
 
 bool Board::newsolve(deque<const Coord> &expanders) {
-    cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders: " << expanders << endl;
+    if(debug) cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders: " << expanders << endl;
     if(check_if_done()) {
         return true;
     }
@@ -36,7 +37,7 @@ bool Board::newsolve(deque<const Coord> &expanders) {
                             deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
                             for(const char_at_pos cap : uses) // letters just added
                                 expand_again.push_front(cap.second);
-                            if(!newsolve(expand_again)) {
+                            if(!newsolve(expand_again)) { // (early exit hook)
                                 depth--;
                                 return false;
                             }
@@ -57,8 +58,12 @@ bool Board::check_if_done() {
         print_machine(ostr);
         collected_results.push_back(ostr.str());
         numresults++;
-        cout << "DEPTH " << depth << ": solution found (" << numresults << "): " << ostr.str();
-        print_debug(cout);
+        if(debug) {
+            cout << "DEPTH " << depth << ": solution found (" << numresults << "): " << ostr.str();
+            print_debug(cout);
+        } else {
+            print_std(cout);
+        }
         return true;
     }
     return false;
@@ -84,6 +89,7 @@ void Board::collect(Place p, const pair<int,int>& step, const string& word, char
         string::const_iterator it = word.cbegin();
         p+=step;
         it++;
+        // Assumes the board dimension (-D XX) is large enough.
         for( ; tile_at(p) == POS_UNUSED && it != word.cend(); p+=step) {
             if(*it++ == ch) {
                 result.push_back(p);
@@ -114,8 +120,8 @@ deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
 }
 
 bool Board::is_char_viable(const char ch, const Place& place) const {
-    if(place.row==0 || place.row==dim-1 || place.col==0 || place.col==dim-1)
-        cout << place << " reject "<<ch << endl;
+    if(debug && (place.row==0 || place.row==dim-1 || place.col==0 || place.col==dim-1))
+        throw runtime_error("Invalid position " + to_string(place.row) + "," + to_string(place.col) +  " (is dimension to small?)");
     return (unplayed[ch-'A'] > 0 && tile_at(place) == POS_UNUSED && check_artifacts(ch, place));
 }
 
@@ -137,9 +143,6 @@ bool Board::is_word_viable(const string& word, const Place& place) const {
 }
 
 bool Board::is_word_at(const string& word, const Place& place) {
-    if(!is_word_viable(word,place)) {
-        return false;
-    }
     Place here(place);
     for(char ch : word) {
         if(tile_at(here++) != ch) {
@@ -185,7 +188,7 @@ Board::check_artifacts(char ch, const Place& place) const {
 
 /* Initialize the board with the given word */
 bool Board::insert_word(const string& word, const Place& place, vector<const char_at_pos>& uses, bool must_share) {
-    if(!is_word_viable(word,place))
+    if(!is_word_viable(word,place)) //assuming this makes it faster, but maybe not
         return false;
     Place here(place);
     int num_shared = 0;
