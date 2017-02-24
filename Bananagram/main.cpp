@@ -53,21 +53,24 @@ void usage(char *cmd) {
     cout << "   -F ##       ! dictionary filename\n";
     cout << "   -W word,... ! comma separated words\n";
     cout << "   -L letters  ! initial letters\n";
-    cout << "   -P          ! preserve order of dictionary\n";
+    cout << "   -P          ! preserve order of dictionary (otherwise sorts, and maybe shuffle)\n";
     cout << "   -p          ! do not preserve order or dictionary [default]\n";
+    cout << "   -S          ! shuffle words in dictionary [default]\n";
+    cout << "   -s          ! do not shuffle words in dictionary\n";
     cout << "   -o #        | output options (001=normal|010=debug|100=machine)\n";
 }
 
 int dim=256, tile_count=0;
 bool debug = false;
-bool preserve_order = true;
+bool preserve_order = false;
+bool shuffle_words = false;
 unsigned output_options = 1;
 string dict_filename;
 string dict_words;  // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
 string initial_letters; // BASEDHABTEDIALFOROO
 int parseargs(int argc, char * const argv[]) {
     int ch;
-    while ((ch = getopt(argc, argv, "?hdD:n:F:L:o:pPW:")) != -1) {
+    while ((ch = getopt(argc, argv, "?hdD:n:F:L:o:pPsSW:")) != -1) {
         switch(ch) {
             case '?':
             case 'h': usage(argv[0]);
@@ -87,6 +90,10 @@ int parseargs(int argc, char * const argv[]) {
             case 'P': preserve_order = true;
                 break;
             case 'p': preserve_order = false;
+                break;
+            case 'S': shuffle_words = true;
+                break;
+            case 's': shuffle_words = false;
                 break;
             case 'W': dict_words.assign(optarg);
                 break;
@@ -119,7 +126,7 @@ int main(int argc,  char * const argv[]) {
     cout << "debug="<<boolalpha<<debug<<"; dim="<<dim<<"; tile_count="<<tile_count<<"; output_options="<<output_options<<endl;
     cout << "dictionary="<<dict_filename<<"; initial_letters="<<initial_letters<<endl;
     
-    Dictionary dictionary(preserve_order);
+    Dictionary dictionary(preserve_order,shuffle_words);
     if(!dict_filename.empty())
         dictionary.load(dict_filename);
     if(!dict_words.empty()) {
@@ -140,7 +147,6 @@ int main(int argc,  char * const argv[]) {
             cout << "Cannot assign " << initial_letters << endl;
             return 1;
         }
-    
     
     if(debug)
         dictionary.dump(cout);

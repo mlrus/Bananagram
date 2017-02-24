@@ -18,17 +18,15 @@ using namespace std;
 
 
 bool Board::newsolve(deque<const Coord> &expanders) {
-    depth++;
     cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders: " << expanders << endl;
     if(check_if_done()) {
-        depth--;
         return true;
     }
+    depth++;
     vector<const char_at_pos> uses;
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
-        cout << "DEPTH " << depth << " expander=" << coord << "\n";
         for(auto word : dictionary.words) {
             deque<const Place> new_expandables = word_starts(word,coord);
             if(!new_expandables.empty()) {
@@ -38,7 +36,10 @@ bool Board::newsolve(deque<const Coord> &expanders) {
                             deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
                             for(const char_at_pos cap : uses) // letters just added
                                 expand_again.push_front(cap.second);
-                            bool rc = newsolve(expand_again);
+                            if(!newsolve(expand_again)) {
+                                depth--;
+                                return false;
+                            }
                         }
                         revert(uses);
                     }
