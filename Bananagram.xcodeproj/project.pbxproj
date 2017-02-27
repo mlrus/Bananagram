@@ -12,6 +12,8 @@
 		02204B4C1E550080009701E7 /* Place.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02204B4A1E550080009701E7 /* Place.cpp */; };
 		02204B4D1E5503C7009701E7 /* Place.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02204B4A1E550080009701E7 /* Place.cpp */; };
 		02204B4E1E5503D3009701E7 /* Place.h in Headers */ = {isa = PBXBuildFile; fileRef = 02204B4B1E550080009701E7 /* Place.h */; };
+		023B23331E634C1900B6DE56 /* Coord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 023B23311E634C1800B6DE56 /* Coord.cpp */; };
+		023B233A1E63553300B6DE56 /* CharAtPos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 023B23381E63553300B6DE56 /* CharAtPos.cpp */; };
 		026655681E53D15A006EF7DB /* simple_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730ED21E4CC2F800214994 /* simple_utils.cpp */; };
 		026655691E53D15A006EF7DB /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDB1E4D740400214994 /* Dictionary.cpp */; };
 		0266556A1E53D15A006EF7DB /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDE1E4D76A800214994 /* Board.cpp */; };
@@ -25,6 +27,10 @@
 		02730ED41E4CC2F800214994 /* simple_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730ED21E4CC2F800214994 /* simple_utils.cpp */; };
 		02730EDC1E4D740400214994 /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDB1E4D740400214994 /* Dictionary.cpp */; };
 		02730EE01E4D76A800214994 /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02730EDE1E4D76A800214994 /* Board.cpp */; };
+		02D761971E637462000529E7 /* CharAtPos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 023B23381E63553300B6DE56 /* CharAtPos.cpp */; };
+		02D7619A1E637489000529E7 /* CharAtPos.h in Headers */ = {isa = PBXBuildFile; fileRef = 023B23391E63553300B6DE56 /* CharAtPos.h */; };
+		02D7619B1E637494000529E7 /* Coord.h in Headers */ = {isa = PBXBuildFile; fileRef = 023B23321E634C1900B6DE56 /* Coord.h */; };
+		02D7619C1E63753E000529E7 /* Coord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 023B23311E634C1800B6DE56 /* Coord.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,9 +87,13 @@
 
 /* Begin PBXFileReference section */
 		021C728B1E53F5A2005970F0 /* shortWords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = shortWords; sourceTree = "<group>"; };
-		021C72941E540907005970F0 /* SimpleTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleTest.cpp; sourceTree = "<group>"; };
+		021C72941E540907005970F0 /* SimpleTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SimpleTest.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		02204B4A1E550080009701E7 /* Place.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Place.cpp; sourceTree = "<group>"; };
 		02204B4B1E550080009701E7 /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		023B23311E634C1800B6DE56 /* Coord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coord.cpp; sourceTree = "<group>"; };
+		023B23321E634C1900B6DE56 /* Coord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coord.h; sourceTree = "<group>"; };
+		023B23381E63553300B6DE56 /* CharAtPos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharAtPos.cpp; path = ../Bananagram/CharAtPos.cpp; sourceTree = "<group>"; };
+		023B23391E63553300B6DE56 /* CharAtPos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharAtPos.h; path = ../Bananagram/CharAtPos.h; sourceTree = "<group>"; };
 		0266552E1E53C8ED006EF7DB /* gtest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gtest.xcodeproj; path = googletest/googletest/xcode/gtest.xcodeproj; sourceTree = "<group>"; };
 		026655631E53D12D006EF7DB /* libBananagram Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libBananagram Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		026655761E53D576006EF7DB /* SimpleTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SimpleTest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,11 +106,11 @@
 		026655881E53E7DC006EF7DB /* shortWords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = shortWords; sourceTree = "<group>"; };
 		02730EC51E4A531900214994 /* bananagram */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bananagram; sourceTree = BUILT_PRODUCTS_DIR; };
 		02730EC81E4A531900214994 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		02730ED21E4CC2F800214994 /* simple_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simple_utils.cpp; sourceTree = "<group>"; };
-		02730ED31E4CC2F800214994 /* simple_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simple_utils.h; sourceTree = "<group>"; };
+		02730ED21E4CC2F800214994 /* simple_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = simple_utils.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		02730ED31E4CC2F800214994 /* simple_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = simple_utils.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		02730EDA1E4D73A500214994 /* Dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = "<group>"; };
 		02730EDB1E4D740400214994 /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dictionary.cpp; sourceTree = "<group>"; };
-		02730EDD1E4D765700214994 /* defs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defs.h; sourceTree = "<group>"; };
+		02730EDD1E4D765700214994 /* defs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = defs.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		02730EDE1E4D76A800214994 /* Board.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Board.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		02730EDF1E4D76A800214994 /* Board.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Board.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 /* End PBXFileReference section */
@@ -187,6 +197,10 @@
 		02730EC71E4A531900214994 /* bananagram */ = {
 			isa = PBXGroup;
 			children = (
+				023B23381E63553300B6DE56 /* CharAtPos.cpp */,
+				023B23391E63553300B6DE56 /* CharAtPos.h */,
+				023B23311E634C1800B6DE56 /* Coord.cpp */,
+				023B23321E634C1900B6DE56 /* Coord.h */,
 				02204B4A1E550080009701E7 /* Place.cpp */,
 				02204B4B1E550080009701E7 /* Place.h */,
 				021C728B1E53F5A2005970F0 /* shortWords */,
@@ -209,6 +223,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D7619B1E637494000529E7 /* Coord.h in Headers */,
+				02D7619A1E637489000529E7 /* CharAtPos.h in Headers */,
 				02204B4E1E5503D3009701E7 /* Place.h in Headers */,
 				0266556D1E53D182006EF7DB /* simple_utils.h in Headers */,
 				0266556E1E53D182006EF7DB /* Dictionary.h in Headers */,
@@ -298,7 +314,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 02730EC01E4A531900214994 /* Build configuration list for PBXProject "bananagram" */;
+			buildConfigurationList = 02730EC01E4A531900214994 /* Build configuration list for PBXProject "Bananagram" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -364,6 +380,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D7619C1E63753E000529E7 /* Coord.cpp in Sources */,
+				02D761971E637462000529E7 /* CharAtPos.cpp in Sources */,
 				02204B4D1E5503C7009701E7 /* Place.cpp in Sources */,
 				026655681E53D15A006EF7DB /* simple_utils.cpp in Sources */,
 				026655691E53D15A006EF7DB /* Dictionary.cpp in Sources */,
@@ -385,8 +403,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				02730EC91E4A531900214994 /* main.cpp in Sources */,
+				023B23331E634C1900B6DE56 /* Coord.cpp in Sources */,
 				02204B4C1E550080009701E7 /* Place.cpp in Sources */,
 				02730ED41E4CC2F800214994 /* simple_utils.cpp in Sources */,
+				023B233A1E63553300B6DE56 /* CharAtPos.cpp in Sources */,
 				02730EE01E4D76A800214994 /* Board.cpp in Sources */,
 				02730EDC1E4D740400214994 /* Dictionary.cpp in Sources */,
 			);
@@ -411,6 +431,7 @@
 		026655651E53D12D006EF7DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_LINK_OBJC_RUNTIME = YES;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -421,6 +442,7 @@
 		026655661E53D12D006EF7DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_LINK_OBJC_RUNTIME = YES;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -578,7 +600,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		02730EC01E4A531900214994 /* Build configuration list for PBXProject "bananagram" */ = {
+		02730EC01E4A531900214994 /* Build configuration list for PBXProject "Bananagram" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				02730ECA1E4A531900214994 /* Debug */,
