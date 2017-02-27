@@ -67,18 +67,18 @@ TEST(utils,ostream_scalars) {
     const Place c_place(1,2,'r');
     const Coord c_coord(1,2);
     Coord coord(1,2);
-    const char_at_pos cap('X',pair<int,int>(1,2));
+    const CharAtPos cap('X',Coord(1,2));
     oss << c_place;
-    EXPECT_EQ(oss.str(),"1:2:horz ");
+    EXPECT_EQ(oss.str(),"(1,2):horz");
     oss.str("");
     oss << c_coord;
-    EXPECT_EQ(oss.str(),"(1,2) ");
+    EXPECT_EQ(oss.str(),"(1,2)");
     oss.str("");
     oss << coord;
-    EXPECT_EQ(oss.str(),"(1,2) ");
+    EXPECT_EQ(oss.str(),"(1,2)");
     oss.str("");
     oss << cap;
-    EXPECT_EQ(oss.str(),"X@(1,2) ");
+    EXPECT_EQ(oss.str(),"X@(1,2)");
     oss.str("");
 }
 
@@ -87,26 +87,26 @@ TEST(utils,ostream_containers) {
     const Place c_place(1,2,'r');
     const Coord c_coord(1,2);
     Coord coord(1,2);
-    const char_at_pos cap('X',pair<int,int>(1,2));
+    const CharAtPos cap('X',Coord(1,2));
     
     vector<const Place> v1({c_place,c_place});
     vector<const Coord> v2({c_coord,c_coord});
     vector<Coord> v3({coord,coord});
-    vector<const char_at_pos> v4({cap,cap});
+    vector<const CharAtPos> v4({cap,cap});
     vector<char> v5({'a','b','c'});
     vector<vector<char>> v6({v5,v5});
     deque<const Place> v7({c_place,c_place});
     oss << v1;
-    EXPECT_EQ(oss.str(),"1:2:horz 1:2:horz ");
+    EXPECT_EQ(oss.str(),"(1,2):horz; (1,2):horz; ");
     oss.str("");
     oss << v2;
-    EXPECT_EQ(oss.str(),"(1,2) (1,2) ");
+    EXPECT_EQ(oss.str(),"(1,2); (1,2); ");
     oss.str("");
     oss << v3;
-    EXPECT_EQ(oss.str(),"(1,2) (1,2) ");
+    EXPECT_EQ(oss.str(),"(1,2); (1,2); ");
     oss.str("");
     oss << v4;
-    EXPECT_EQ(oss.str(),"X@(1,2)  X@(1,2)  ");
+    EXPECT_EQ(oss.str(),"X@(1,2); X@(1,2); ");
     oss.str("");
     oss << v5;
     EXPECT_EQ(oss.str(),"abc");
@@ -115,7 +115,7 @@ TEST(utils,ostream_containers) {
     EXPECT_EQ(oss.str(),"abc\nabc\n");
     oss.str("");
     oss << v7;
-    EXPECT_EQ(oss.str(),"1:2:horz \n1:2:horz \n");
+    EXPECT_EQ(oss.str(),"(1,2):horz; (1,2):horz; ");
 
 }
 
@@ -145,7 +145,7 @@ TEST(Place,assignment) {
 TEST(Place,operators) {
     Place r5c6h(5,6,Place::Direction::horizontal);
     Place r6c7v(6,7,'c');
-    r5c6h += pair<int,int>(1,0);
+    r5c6h += Coord(1,0);
     EXPECT_EQ(r5c6h.getrow(),6);
     EXPECT_EQ(r5c6h.getcol(),6);
     EXPECT_EQ(r5c6h,Place(6,6,'r'));
@@ -171,11 +171,35 @@ TEST(board,accept) {
         cout << "Cannot assign the letters requested.\n";
         ASSERT_EQ(true,false);
     }
-    Coord initial_pos(board.dim/2,board.dim/2);
-    vector<const char_at_pos> uses;
+    Coord initial_pos(int(board.dim/2),int(board.dim/2));
+    vector<const CharAtPos> uses;
     board.insert_word("CAT",Place(5,5,Place::horizontal),uses);
     
     cout << board;
+}
+
+TEST(dictionary,iterator_fw) {
+    Dictionary dictionary(true);
+    dictionary.add_words({{"one","two","three"}});
+    Dictionary::worditerator iter(dictionary.words);
+    ASSERT_EQ("ONE",iter.next());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("ONE",iter.begin());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("THREE",iter.next());
+    ASSERT_FALSE(iter.has_next());
+}
+
+TEST(dictionary,iterator_bw) {
+    Dictionary dictionary(true);
+    dictionary.add_words({{"one","two","three"}});
+    Dictionary::worditerator iter(dictionary.words,false);
+    ASSERT_EQ("THREE",iter.next());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("THREE",iter.begin());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("ONE",iter.next());
+    ASSERT_FALSE(iter.has_next());
 }
 
 /*
@@ -244,7 +268,7 @@ Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO",
 
 
 bool run_board_test(Board& board, vector<pair<string,Coord>>& test_set, bool trace=false) {
-    vector<const char_at_pos>uses;
+    vector<const CharAtPos>uses;
     bool any = false;
     int n = 0;
     for(auto test : test_set) {
@@ -273,7 +297,7 @@ bool run_board_test(Board& board, vector<pair<string,Coord>>& test_set, bool tra
 #if 0
 TEST(board,collect_a) {
     Board board(define_board());
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     
     vector<pair<string,Coord>> test_set({
         {"ALOES",Coord(8,12)},
@@ -286,7 +310,7 @@ TEST(board,collect_a) {
 
 TEST(board,collect_b) {
     Board board(define_board());
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     vector<pair<string,Coord>> test_set({
         { "ALOES",Coord(6,12)},
         { "BASH", Coord(8,12)},
@@ -300,7 +324,7 @@ TEST(board,collect_b) {
 TEST(board,fitting_001) {
     {
     Board board(define_board("TACAT",{"TAC","CAT"}));
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     vector<pair<string,Coord>> test_set({
         {"CAT",Coord(8,10)},
         {"TAC",Coord(4,8)},
@@ -312,7 +336,7 @@ TEST(board,fitting_001) {
     }
     {
     Board board(define_board("TACAT",{"CAT","TAC"}));
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     vector<pair<string,Coord>> test_set({
         {"CAT",Coord(8,10)},
         {"TAC",Coord(4,8)},
@@ -329,7 +353,7 @@ TEST(board,fitting_001) {
 TEST(board,fitting_002) {
     Board board(define_board("CACAT",{"CAT","TAC"}));
     cout << "board.debug=" << board.debug << endl;
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     vector<pair<string,Coord>> test_set({
         {"TAC",Coord(8,8)},
         {"TAC",Coord(8,9)},

@@ -8,9 +8,9 @@ EXTOPT    = -fvectorize -funroll-loops -fno-lax-vector-conversions -stdlib=libc+
 
 CXXFLAGS  = $(ARCHFLAGS) $(EXTOPT) -Wall -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -DDEBUG=$(DEBUG)
 
-HEADERS = Board.h Dictionary.h Place.h defs.h simple_utils.h
+HEADERS = Board.h CharAtPos.h Coord.h Dictionary.h Place.h defs.h simple_utils.h
 
-DOTCPP = Board.cpp Dictionary.cpp Place.cpp simple_utils.cpp main.cpp
+DOTCPP = CharAtPos.cpp Coord.cpp Board.cpp Dictionary.cpp Place.cpp simple_utils.cpp main.cpp
 
 BINS =  banana
 
@@ -19,7 +19,7 @@ DOTO    =       $(DOTCPP:%.cpp=$(OBJ_DIR)/%.o)
 all:    $(DOTO) $(BINS) $(test_targets)
 
 banana:	$(DOTO)
-	$(CXX) $(CXXFLAGS) -o banana main.o Board.o Dictionary.o Place.o simple_utils.o
+	$(CXX) $(CXXFLAGS) -o banana $(DOTO)
 
 run:	banana ../TestData/words.5letters
 	./banana -D 96 -n 21 -F ../TestData/words.5letters
