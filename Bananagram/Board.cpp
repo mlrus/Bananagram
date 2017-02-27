@@ -76,12 +76,14 @@ bool Board::check_if_done() {
             << " (" << trunc(0.5 + 100.0 * numunique / numresults) << "%)\n";
             cout << st << "\n";
             boards_seen.insert(st);
+#if 0
             if(numunique%500==0) {
                 cout << "======================\n";
                 for(auto p : board_counts)
                     cout << p.second << p.first;
                 cout << "======================\n";
             }
+#endif
         }
         ostr.str("");
         print_machine(ostr);
