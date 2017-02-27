@@ -26,7 +26,7 @@ using std::unordered_set;
 class Dictionary {
     struct {
         bool operator()(const string& a, const string& b) {
-            long s = b.size() - a.size();
+            long s = a.size() - b.size();
             if(s<0) return true;
             if(s>0) return false;
             return a.compare(b);

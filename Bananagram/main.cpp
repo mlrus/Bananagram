@@ -57,7 +57,9 @@ void usage(char *cmd) {
     cout << "   -P            ! preserve order of dictionary (otherwise sorts, and maybe shuffle)\n";
     cout << "   -p            ! do not preserve order or dictionary [default]\n";
     cout << "   -S            ! shuffle words in dictionary [default]\n";
-    cout << "   -s            ! do not shuffle words in dictionary\n";
+    cout << "   -s            ! sort words in dictionary by length and alphabet\n";
+    cout << "   -T            ! randomize tiles\n";
+    cout << "   -t            ! do not randomize tiles\n";
     cout << "   -o #          ! output options (001=normal|010=debug|100=machine)\n";
 }
 
@@ -67,13 +69,14 @@ int dim=256,
     max_results = 1000;
 bool debug = false,
     preserve_order = false,
-    shuffle_words = false;
+    shuffle_words = false,
+    shuffle_t = false;
 string dict_filename;
 string dict_words;      // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
 string initial_letters; // BASEDHABTEDIALFOROO
 int parseargs(int argc, char * const argv[]) {
     int ch;
-    while ((ch = getopt(argc, argv, "?hdD:n:F:L:M:o:pPsSW:")) != -1) {
+    while ((ch = getopt(argc, argv, "?hdD:n:F:L:M:o:pPsStTW:")) != -1) {
         switch(ch) {
             case '?':
             case 'h': usage(argv[0]);
@@ -99,6 +102,10 @@ int parseargs(int argc, char * const argv[]) {
             case 'S': shuffle_words = true;
                 break;
             case 's': shuffle_words = false;
+                break;
+            case 'T': shuffle_t = true;
+                break;
+            case 't': shuffle_t = false;
                 break;
             case 'W': dict_words.assign(optarg);
                 break;
@@ -139,9 +146,16 @@ int main(int argc,  char * const argv[]) {
         split(dict_words,',',words);
         dictionary.add_words(words);
     }
+    cout << "WORDS\n";
+    dictionary.dump(cout);
+    cout << "----\n";
 
     vector<char> tiles(initialize_tiles());
-    if(!preserve_order) shuffle_tiles(tiles);
+    if(shuffle_t) {
+        cout << "Randomizing tiles\n";
+        shuffle_tiles(tiles);
+    } else
+        cout << "Not randomizing tiles\n";
     
     
     Board board(dictionary, tiles, dim, tile_count);
@@ -162,6 +176,7 @@ int main(int argc,  char * const argv[]) {
     int numanswers = 0;
     vector<const CharAtPos> uses;
     string unplayed(board.show_unplayed());
+    cout << unplayed << endl;
     board.print_debug(cout);
     cout << board << endl;
     for(string & word : dictionary.words) {

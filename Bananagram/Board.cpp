@@ -73,9 +73,13 @@ bool Board::check_if_done() {
             numunique++;
             cout << "total=" << numresults
             << " unique=" << numunique
-            << " (" << trunc(0.5 + 100.0 * numunique / numresults) << "%)\n"
-            << st << endl;
+            << " (" << trunc(0.5 + 100.0 * numunique / numresults) << "%)\n";
+            cout << st << "\n";
             boards_seen.insert(st);
+            if(numunique%100==0) {
+                for(auto p : board_counts)
+                    cout << p.second << p.first;
+            }
         }
         ostr.str("");
         print_machine(ostr);
@@ -333,10 +337,10 @@ void Board::print_std(ostream& out) const {
             for(int j = from_col; j <= to_col; j++) {
                 out << this->board[i][j];
             }
-            out << endl;
+            out << "\n";
         }
     }
-    out << endl;
+    out << "\n";
 }
 
 void Board::print_machine(ostream& out) const {
@@ -352,7 +356,7 @@ void Board::print_machine(ostream& out) const {
             }
             out << ":";
         }
-        out << endl;
+        out << "\n";
     }
 }
 
