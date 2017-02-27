@@ -73,7 +73,7 @@ string dict_words;      // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
 string initial_letters; // BASEDHABTEDIALFOROO
 int parseargs(int argc, char * const argv[]) {
     int ch;
-    while ((ch = getopt(argc, argv, "?hdD:n:F:L:o:pPsSW:")) != -1) {
+    while ((ch = getopt(argc, argv, "?hdD:n:F:L:M:o:pPsSW:")) != -1) {
         switch(ch) {
             case '?':
             case 'h': usage(argv[0]);

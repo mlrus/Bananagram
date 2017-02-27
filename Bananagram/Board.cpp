@@ -28,7 +28,7 @@ bool Board::newsolve(deque<const Coord> &expanders) {
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
-#if 1
+#if 0
         // Use same word order at each layer.
         for(auto word : dictionary.words) {
 #else
@@ -50,7 +50,7 @@ bool Board::newsolve(deque<const Coord> &expanders) {
                             }
                         }
                         revert(uses);
-                        if(numresults >= max_results) {
+                        if(numunique >= max_results) {
                             depth--;
                             return false;
                         }
@@ -70,9 +70,10 @@ bool Board::check_if_done() {
         print_std(ostr);
         string st(ostr.str());
         if(boards_seen.count(st)==0) {
+            numunique++;
             cout << "total=" << numresults
-            << " unique=" << boards_seen.size()
-            << " (" << trunc(0.5 + 100.0 * boards_seen.size() / numresults) << "%)\n"
+            << " unique=" << numunique
+            << " (" << trunc(0.5 + 100.0 * numunique / numresults) << "%)\n"
             << st << endl;
             boards_seen.insert(st);
         }

@@ -47,6 +47,7 @@ public:
     const unsigned int numtiles;
     unsigned int output_options;
     int numresults;
+    int numunique;
     int max_results;
     bool debug;
 
@@ -65,7 +66,8 @@ public:
     numtiles(ntile),
     output_options(1),
     numresults(0),
-    maxresults(1000),
+    numunique(0),
+    max_results(1000),
     debug(false) { }
     
     bool newsolve(deque<const Coord>&);
