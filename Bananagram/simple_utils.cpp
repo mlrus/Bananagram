@@ -26,56 +26,25 @@ using std::list;
 using std::deque;
 using std::allocator;
 
-std::ostream& operator<<(std::ostream& out, const vector<char>& vec) {
+template std::ostream& operator<<(std::ostream& out, const deque<const Place>& vec);
+template std::ostream& operator<<(std::ostream& out, const deque<const Coord>& vec);
+template std::ostream& operator<<(std::ostream& out, const vector<const Place>& vec);
+template std::ostream& operator<<(std::ostream& out, const vector<const CharAtPos>& vec);
+
+
+std::ostream&
+operator<<(std::ostream& out, const vector<char>& vec) {
     copy(vec.cbegin(), vec.cend(), ostream_iterator<char>(out));
     return out;
 }
-std::ostream& operator<<(std::ostream& out, const vector<const Place>& vec) {
-    copy(vec.cbegin(), vec.cend(), ostream_iterator<const Place>(out));
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const deque<const Coord>& vec) {
-    for(deque<const Coord>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << "; ";
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const vector<vector<char>>& vec) {
+
+std::ostream&
+operator<<(std::ostream& out, const vector<vector<char>>& vec) {
     for(vector<vector<char>>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << endl;
     return out;
 }
-std::ostream& operator<<(std::ostream& out, const deque<const Place>& vec) {
-    for(deque<const Place>::const_iterator it = vec.cbegin(); it != vec.cend(); it++) out << *it << "; ";
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const vector<const char_at_pos>& vec) {
-    for(const char_at_pos &c : vec) out << c << " ";
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const vector<const Coord>& vec) {
-    for(auto c : vec) out << c;
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const vector<Coord>& vec) {
-    for(auto c : vec) out << c;
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const char_at_pos& cap) {
-    out << cap.first << "@" << cap.second;
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const Coord& coord) {
-    out << "(" << coord.first << "," << coord.second << ") ";
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, Coord& coord) {
-    out << "(" << coord.first << "," << coord.second << ") ";
-    return out;
-}
-std::ostream& operator<<(std::ostream& out, const Place& place) {
-    out << place.row
-    << ":" << place.col
-    << ":" << Place::PlaceNames[place.direction] << " ";
-    return out;
-}
+
+
 
 std::ostream& operator<<(std::ostream& out, const Board& board) {
     if(!board.empty())
@@ -242,11 +211,16 @@ vector<char> initialize_tiles() {
         for(unsigned long j = 0; j < initial_counts[i]; j++)
             tiles.push_back('A'+i);
     }
-    unsigned long long seed = std::chrono::system_clock::now().time_since_epoch().count();
+    unsigned long long seed = 17<<4;
     std::shuffle(tiles.begin(), tiles.end(), std::mt19937_64(seed));
-    cout << "There are " << tiles.size() << " initial tiles." << endl;
     return tiles;
 }
+
+void shuffle_tiles(vector<char>& tiles) {
+    unsigned long long seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(tiles.begin(), tiles.end(), std::mt19937_64(seed));
+}
+
 
 vector<char> tochar(const string& str) {
     vector<char> res;
@@ -260,3 +234,5 @@ template void rvec(const string & name, vector<string> & dat);
 //template void readvec<std::string>(const std::string & name, std::list<std::string> &dat);
 //template void rvec<vector, string, allocator<string>>(const string & name, vector<string> & dat);
 //template void rvec<vector>(const string & name, vector<string> & dat);
+
+

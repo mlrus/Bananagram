@@ -27,6 +27,8 @@ void Dictionary::prepare(vector<string>& words) {
             std::shuffle(words.begin(), words.end(), std::mt19937_64(seed));
         }
         wordset.clear();
+    } else {
+        cout << "Not sorting or shuffling the words\n";
     }
     wordset.insert(words.begin(), words.end());
 }
@@ -52,5 +54,19 @@ bool Dictionary::has(const string& word) const {
 void
 Dictionary::dump(ostream& out) {
     for(auto w : words) out << w << "\n";
+}
+
+bool Dictionary::worditerator::has_next() {
+    if(forward)
+        return distance(it,words.end())>1;
+    else
+        return distance(words.begin(),it)>1;
+}
+const string Dictionary::worditerator::begin() {
+    it = forward?words.begin()-1:words.end();
+    return next();
+}
+const string Dictionary::worditerator::next() {
+    return *(forward?(it=std::next(it)):(it=std::prev(it)));
 }
 

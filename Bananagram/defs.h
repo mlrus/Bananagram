@@ -12,13 +12,17 @@
 #include <string>
 #include <iostream>
 #include <list>
-#include <utility>
+//#include <utility>
 #include <vector>
 #include <unordered_map>
 
-using std::pair;
-typedef pair<int,int> Coord;
-typedef pair<char, Coord> char_at_pos;
+//#include "Coord.h"
+//#include "CharAtPos.h"
+
+//using std::pair;
+//typedef pair<int,int> Coord;
+//typedef pair<char, Coord> CharAtPos;
+
 
 static const char POS_UNUSED = '_';
 

@@ -20,19 +20,22 @@
 
 #include "defs.h"
 #include "Place.h"
+#include "Coord.h"
+#include "CharAtPos.h"
 
 using std::string;
 
-std::ostream& operator<<(std::ostream& out, Coord& place);
-std::ostream& operator<<(std::ostream& out, const Place& place);
-std::ostream& operator<<(std::ostream& out, const Coord& place);
-std::ostream& operator<<(std::ostream& out, const char_at_pos& c_a_p);
-std::ostream& operator<<(std::ostream& out, const vector<const Place>& pvec);
-std::ostream& operator<<(std::ostream& out, const vector<const Coord>& cvec);
-std::ostream& operator<<(std::ostream& out, const vector<const char_at_pos>& cvec);
-std::ostream& operator<<(std::ostream& out, const deque<const Place>& vec);
-std::ostream& operator<<(std::ostream& out, const deque<const Coord>& vec);
-std::ostream& operator<<(std::ostream& out, const vector<Coord>& cvec);
+template <template<typename, typename> class Container, typename Value, typename Allocator=std::allocator<Value>>
+std::ostream& operator<<(std::ostream& out, const Container<Value, Allocator>& vec) {
+    for(typename Container<Value,Allocator>::const_iterator it = vec.cbegin();
+        it != vec.cend(); it++) { out << *it << "; "; };
+    return out;
+}
+
+//std::ostream& operator<<(std::ostream& out, Coord& place);
+//std::ostream& operator<<(std::ostream& out, const Place& place);
+//std::ostream& operator<<(std::ostream& out, const Coord& place);
+//std::ostream& operator<<(std::ostream& out, const CharAtPos& c_a_p);
 std::ostream& operator<<(std::ostream& out, const vector<char>& vec);
 std::ostream& operator<<(std::ostream& out, const vector<vector<char>>& vec);
 
@@ -41,6 +44,9 @@ showargs(int argc, char * const argv[]);
 
 vector<char>
 initialize_tiles();
+
+void
+shuffle_tiles(vector<char>& tiles);
 
 vector<char>
 tochar(const string& str);

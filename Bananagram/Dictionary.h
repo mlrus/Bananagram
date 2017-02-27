@@ -45,6 +45,20 @@ public:
     unsigned long size() { return words.size(); }
     bool has(const string& word) const;
     void dump(ostream&);
+    
+    
+    class worditerator {
+        const vector<string>& words;
+        vector<string>::const_iterator it;
+        bool forward = true;
+    public:
+        const string begin();
+        const string next();
+        bool has_next();
+        worditerator(const vector<string>& w, bool dir=true) : words(w), forward(dir) {
+            it = forward?words.begin()-1:words.end();
+        }
+    };
 };
 
 #endif /* Dictionary_h */

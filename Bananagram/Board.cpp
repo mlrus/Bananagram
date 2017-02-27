@@ -24,25 +24,36 @@ bool Board::newsolve(deque<const Coord> &expanders) {
         return true;
     }
     depth++;
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
+#if 1
+        // Use same word order at each layer.
         for(auto word : dictionary.words) {
+#else
+        // Alternate word order between layers.
+        Dictionary::worditerator words(dictionary.words,depth%2==0);
+        for(auto word = words.begin(); words.has_next(); word = words.next()) {
+#endif
             deque<const Place> new_expandables = word_starts(word,coord);
             if(!new_expandables.empty()) {
                 for(const Place expand_at : new_expandables) {
                     if(insert_word(word, expand_at, uses)) {
                         if(!check_if_done()) {
                             deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
-                            for(const char_at_pos cap : uses) // letters just added
-                                expand_again.push_front(cap.second);
+                            for(const CharAtPos cap : uses) // letters just added
+                                expand_again.push_front(cap.coord);
                             if(!newsolve(expand_again)) { // (early exit hook)
                                 depth--;
                                 return false;
                             }
                         }
                         revert(uses);
+                        if(numresults >= max_results) {
+                            depth--;
+                            return false;
+                        }
                     }
                 }
             }
@@ -54,38 +65,43 @@ bool Board::newsolve(deque<const Coord> &expanders) {
 
 bool Board::check_if_done() {
     if(num_unplayed()==0) {
-        ostringstream ostr;
-        print_machine(ostr);
-        collected_results.push_back(ostr.str());
         numresults++;
-        if(debug) {
-            cout << "DEPTH " << depth << ": solution found (" << numresults << "): " << ostr.str();
-            print_debug(cout);
-        } else {
-            print_std(cout);
+        ostringstream ostr;
+        print_std(ostr);
+        string st(ostr.str());
+        if(boards_seen.count(st)==0) {
+            cout << "total=" << numresults
+            << " unique=" << boards_seen.size()
+            << " (" << trunc(0.5 + 100.0 * boards_seen.size() / numresults) << "%)\n"
+            << st << endl;
+            boards_seen.insert(st);
         }
+        ostr.str("");
+        print_machine(ostr);
+        board_counts[ostr.str()]++;
+        
         return true;
     }
     return false;
 }
 
-void Board::revert(vector<const char_at_pos>& uses) {
+void Board::revert(vector<const CharAtPos>& uses) {
     if(uses.size()==0) return;
-    for(char_at_pos used : uses) {
-        char ch = used.first;
-        Coord c = used.second;
-        ushort x = c.first;
-        ushort y = c.second;
+    for(CharAtPos used : uses) {
+        char ch = used.dir;
+        Coord c = used.coord;
+        ushort x = c.row;
+        ushort y = c.col;
         board[x][y] = POS_UNUSED;
         unplayed[ch-'A']++;
     }
-    std::vector<const char_at_pos>().swap(uses);
+    std::vector<const CharAtPos>().swap(uses);
     uses.clear();
 }
 
 
-void Board::collect(Place p, const pair<int,int>& step, const string& word, char ch, deque<const Place>& result) {
-    if(step.first<0||step.second<0) {
+void Board::collect(Place p, const Coord& step, const string& word, char ch, deque<const Place>& result) {
+    if(step.row<0||step.col<0) {
         string::const_iterator it = word.cbegin();
         p+=step;
         it++;
@@ -110,7 +126,7 @@ void Board::collect(Place p, const pair<int,int>& step, const string& word, char
 
 deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
     deque<const Place> result;
-    const char ch = board[coord.first][coord.second];
+    const char ch = board[coord.row][coord.col];
     collect(Place(coord,horz), Place::left, word, ch, result);
     collect(Place(coord,horz), Place::right, word, ch, result);
     collect(Place(coord,vert), Place::up, word, ch, result);
@@ -120,22 +136,22 @@ deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
 }
 
 bool Board::is_char_viable(const char ch, const Place& place) const {
-    if(debug && (place.row==0 || place.row==dim-1 || place.col==0 || place.col==dim-1))
-        throw runtime_error("Invalid position " + to_string(place.row) + "," + to_string(place.col) +  " (is dimension to small?)");
+    if(debug && (place.coord.row==0 || place.coord.row==dim-1 || place.coord.col==0 || place.coord.col==dim-1))
+        throw runtime_error("Invalid position " + to_string(place.coord.row) + "," + to_string(place.coord.col) +  " (is dimension to small?)");
     return (unplayed[ch-'A'] > 0 && tile_at(place) == POS_UNUSED && check_artifacts(ch, place));
 }
 
 bool Board::is_word_viable(const string& word, const Place& place) const {
     if(place.is_row()) {
         if(tile_at(place+Place::left) != POS_UNUSED ||
-           place.col + word.length() >= dim ||
-           tile_at(place+pair<int,int>(0,word.length())) != POS_UNUSED) {
+           place.coord.col + word.length() >= dim ||
+           tile_at(place+Coord((unsigned long)(0),word.length())) != POS_UNUSED) {
             return false;
         }
     } else {
         if(tile_at(place+Place::up)!= POS_UNUSED ||
-           place.row + word.length() >= dim ||
-           tile_at(place+pair<int,int>(word.length(),0)) != POS_UNUSED) {
+           place.coord.row + word.length() >= dim ||
+           tile_at(place+Coord(word.length(),(unsigned long)(0))) != POS_UNUSED) {
             return false;
         }
     }
@@ -155,7 +171,7 @@ bool Board::is_word_at(const string& word, const Place& place) {
 /*
  Intersect the word to the board, saving changes to "uses".
  */
-bool Board::try_insert(const string& word, const Place& place, vector<const char_at_pos>& uses) {
+bool Board::try_insert(const string& word, const Place& place, vector<const CharAtPos>& uses) {
     return insert_word(word,place,uses,true);
 }
 
@@ -163,11 +179,11 @@ bool Board::try_insert(const string& word, const Place& place, vector<const char
 bool
 Board::check_artifacts(char ch, const Place& place) const {
     Place::Direction perpendicular =
-    place.direction==Place::Direction::horizontal?
+    place.dir==Place::Direction::horizontal?
     Place::Direction::vertical:
     Place::Direction::horizontal;
     
-    Place loc(place.row,place.col,perpendicular);
+    Place loc(place.coord,perpendicular);
     Place before = loc;
     Place after  = loc;
     string word_to_check;
@@ -187,7 +203,7 @@ Board::check_artifacts(char ch, const Place& place) const {
 
 
 /* Initialize the board with the given word */
-bool Board::insert_word(const string& word, const Place& place, vector<const char_at_pos>& uses, bool must_share) {
+bool Board::insert_word(const string& word, const Place& place, vector<const CharAtPos>& uses, bool must_share) {
     if(!is_word_viable(word,place)) //assuming this makes it faster, but maybe not
         return false;
     Place here(place);
@@ -199,8 +215,8 @@ bool Board::insert_word(const string& word, const Place& place, vector<const cha
             continue;
         }
         if(is_char_viable(ch,here)) {
-            uses.push_back(make_pair(ch,pair<int,int>(here.row,here.col)));
-            board[here.row][here.col] = ch;
+            uses.push_back(CharAtPos(ch,here.coord));
+            board[here.coord.row][here.coord.col] = ch;
             unplayed[ch-'A']--;
             here++;
             continue;

@@ -7,9 +7,17 @@
 //
 
 #include "Place.h"
+#include "Coord.h"
 std::unordered_map<int, std::string> Place::PlaceNames { { Place::Direction::horizontal, "horz" },
     { Place::Direction::vertical, "vert" }};
-const std::pair<int, int> Place::left(0,-1);
-const std::pair<int, int> Place::right(0,1);
-const std::pair<int, int> Place::up(-1,0);
-const std::pair<int, int> Place::down(1,0);
+
+const Coord Place::left(0,-1);
+const Coord Place::right(0,1);
+const Coord Place::up(-1,0);
+const Coord Place::down(1,0);
+
+std::ostream&
+operator<<(std::ostream& out, const Place& place) {
+    out << place.coord << ":" << Place::PlaceNames[place.dir];
+    return out;
+}

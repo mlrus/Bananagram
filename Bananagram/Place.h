@@ -15,7 +15,9 @@
 #include <unordered_map>
 #include <algorithm>
 
-#include "defs.h"
+//#include "defs.h"
+
+#include "Coord.h"
 
 using namespace std;
 
@@ -23,94 +25,101 @@ class Place {
 public:
     enum Direction { horizontal, vertical };
 public:
-    int row, col;
-    Direction direction;
+    Coord coord;
+    Direction dir;
 public:
     static std::unordered_map<int, std::string> PlaceNames;
-    static const std::pair<int,int> right, left, up, down;
-    Place(int r, int c, Direction dir) : row(r), col(c), direction(dir) { }
-    Place(const Coord& coord, Direction dir) : row(coord.first), col(coord.second), direction(dir) { }
-    Place(Place &pl) : row(pl.row), col(pl.col), direction(pl.direction) { }
-    Place(const Place &pl) : row(pl.row), col(pl.col), direction(pl.direction) { }
-    Place(int r, int c, char d) : row(r),col(c), direction(d=='r'?Direction::horizontal:Direction::vertical) {
-        if(d!='r'&&d!='c') throw std::out_of_range("direction_error");
+    
+    static const Coord right, left, up, down;
+    Place(int r, int c, Direction dir) : coord(Coord(r,c)), dir(dir) { }
+    Place(const Coord& c, Direction d) : coord(c), dir(d) { }
+    Place(Place &pl) : coord(pl.coord), dir(pl.dir) { }
+    Place(const Place &pl) : coord(pl.coord), dir(pl.dir) { }
+    Place(int r, int c, char d) : coord(r,c), dir(d=='r'?Direction::horizontal:Direction::vertical) {
+        if(d!='r'&&d!='c') throw std::out_of_range("dir_error");
     }
     virtual ~Place() { }
     
     //Place& operator=(Place arg) { std::swap(*this,arg); return *this; }
     Place& operator=(Place arg) {
-        row = arg.row;
-        col = arg.col;
-        direction = arg.direction;
+        coord = arg.coord;
+        dir = arg.dir;
         return *this;
     }
     Place& operator++() { // pre-increment
-        if(direction == Direction::horizontal)
-            col++;
+        if(dir == Direction::horizontal)
+            coord.col++;
         else
-            row++;
+            coord.row++;
         return *this;
     }
     Place& operator--() { // pre-increment
-        if(direction == Direction::horizontal)
-            col--;
+        if(dir == Direction::horizontal)
+            coord.col--;
         else
-            row--;
+            coord.row--;
         return *this;
     }
     Place& operator++(int) { // post-increment
         static Place copy(*this);
-        if(direction == Direction::horizontal)
-            col++;
+        if(dir == Direction::horizontal)
+            coord.col++;
         else
-            row++;
+            coord.row++;
         return copy;
     }
     Place& operator--(int) { // post-increment
         static Place copy(*this);
-        if(direction == Direction::horizontal)
-            col--;
+        if(dir == Direction::horizontal)
+            coord.col--;
         else
-            row--;
+            coord.row--;
         return copy;
     }
     Place operator+(const Place& arg) const {
-        return Place(row+arg.row, col+arg.col, direction);
+        return Place(coord.row+arg.coord.row, coord.col+arg.coord.col, dir);
     }
     Place operator-(const Place& arg) const {
-        return Place(row-arg.row, col-arg.col, direction);
+        return Place(coord.row-arg.coord.row, coord.col-arg.coord.col, dir);
     }
-    Place operator+(const std::pair<int,int>& v) const {
-        return Place(row+v.first, col+v.second, direction);
+    Place operator+(const Coord& v) const {
+        return Place(coord+v, dir);
     }
-    Place& operator+=(const std::pair<int,int>& v) {
-        row += v.first; col += v.second; return *this;
+    Place operator-(const Coord& v) const {
+        return Place(coord-v, dir);
     }
-    Place operator-(const std::pair<int,int>& v) const {
-        return Place(row-v.first, col-v.second, direction);
+    Place& operator+=(const Coord& c) {
+        coord+=c;
+        return *this;
     }
-    Place& operator-=(const std::pair<int,int>& v) {
-        row -= v.first; col -= v.second; return *this;
+    Place& operator-=(const Coord& c) {
+        coord-=c;
+        return *this;
     }
-    int distL1(Place& a, Place& b) { Place p = a-b; return abs(p.row)+abs(p.col); }
+    int distL1(Place& a, Place& b) {
+        Place p(a-b);
+        return abs(p.coord.row)+abs(p.coord.col); }
 
     bool operator==(const Place& other) const {
-        return std::tie(this->row, this->col, this->direction) == std::tie(other.row, other.col, other.direction);
+        return std::tie(this->coord.row, this->coord.col, this->dir) ==
+                std::tie(other.coord.row, other.coord.col, other.dir);
     }
     bool operator!=(const Place& other) const {
         return ! this->operator==(other);
     }
     bool operator<(const Place& other) const {
-        return std::tie(this->row, this->col, this->direction) < std::tie(other.row, other.col, other.direction);
+        return std::tie(this->coord.row, this->coord.col, this->dir) < std::tie(other.coord.row, other.coord.col, other.dir);
     }
     friend bool operator<( Place& l, const Place& r) {
         return l.operator<(r);
     }
-    int getrow() const { return row; }
-    int getcol() const { return col; }
-    bool is_row() const { return direction == Direction::horizontal; }
-    bool is_col() const { return direction == Direction::vertical; }
-    Direction getdir() const { return direction; }
+    int getrow() const { return coord.row; }
+    int getcol() const { return coord.col; }
+    bool is_row() const { return dir == Direction::horizontal; }
+    bool is_col() const { return dir == Direction::vertical; }
+    Direction getdir() const { return dir; }
 };
+
+std::ostream& operator<<(std::ostream& out, const Place& place);
 
 #endif /* Place_h */

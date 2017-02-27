@@ -45,24 +45,26 @@ void usage(char *cmd) {
     cout << "Usage\n";
     cout << "  " << cmd << " -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P\n";
     cout << "Options\n";
-    cout << "   -?          ! help\n";
-    cout << "   -h          ! help\n";
-    cout << "   -d          ! debug\n";
-    cout << "   -D ##       ! dimension\n";
-    cout << "   -n ##       ! draw n tiles\n";
-    cout << "   -F ##       ! dictionary filename\n";
-    cout << "   -W word,... ! comma separated words\n";
-    cout << "   -L letters  ! initial letters\n";
-    cout << "   -P          ! preserve order of dictionary (otherwise sorts, and maybe shuffle)\n";
-    cout << "   -p          ! do not preserve order or dictionary [default]\n";
-    cout << "   -S          ! shuffle words in dictionary [default]\n";
-    cout << "   -s          ! do not shuffle words in dictionary\n";
-    cout << "   -o #        | output options (001=normal|010=debug|100=machine)\n";
+    cout << "   -?            ! help\n";
+    cout << "   -h            ! help\n";
+    cout << "   -d            ! debug\n";
+    cout << "   -D ##         ! dimension\n";
+    cout << "   -n ##         ! draw n tiles\n";
+    cout << "   -F ##         ! dictionary filename\n";
+    cout << "   -W word,...   ! comma separated words\n";
+    cout << "   -L letters    ! initial letters\n";
+    cout << "   -M maxresults ! max results (default 1000)\n";
+    cout << "   -P            ! preserve order of dictionary (otherwise sorts, and maybe shuffle)\n";
+    cout << "   -p            ! do not preserve order or dictionary [default]\n";
+    cout << "   -S            ! shuffle words in dictionary [default]\n";
+    cout << "   -s            ! do not shuffle words in dictionary\n";
+    cout << "   -o #          ! output options (001=normal|010=debug|100=machine)\n";
 }
 
 int dim=256,
     tile_count=21,
-    output_options = 1;
+    output_options = 1,
+    max_results = 1000;
 bool debug = false,
     preserve_order = false,
     shuffle_words = false;
@@ -84,7 +86,9 @@ int parseargs(int argc, char * const argv[]) {
                 break;
             case 'F': dict_filename.assign(optarg);
                 break;
-            case 'L': initial_letters.assign(optarg);
+            case 'L': initial_letters.assign(optarg);  //TENUEFMDWRIISTLPONEOI
+                break;
+            case 'M': max_results=atoi(optarg);
                 break;
             case 'o': output_options=atoi(optarg);
                 break;
@@ -136,10 +140,14 @@ int main(int argc,  char * const argv[]) {
         dictionary.add_words(words);
     }
 
+    vector<char> tiles(initialize_tiles());
+    if(!preserve_order) shuffle_tiles(tiles);
     
-    Board board(dictionary, initialize_tiles(), dim, tile_count);
+    
+    Board board(dictionary, tiles, dim, tile_count);
     board.debug = debug;
     board.output_options=output_options;
+    board.max_results = max_results;
     
     if(initial_letters.empty())
         board.peel(tile_count);
@@ -152,7 +160,7 @@ int main(int argc,  char * const argv[]) {
     const Place start = Place(dim/2, dim/2, Place::Direction::horizontal);
 
     int numanswers = 0;
-    vector<const char_at_pos> uses;
+    vector<const CharAtPos> uses;
     string unplayed(board.show_unplayed());
     board.print_debug(cout);
     cout << board << endl;
@@ -160,7 +168,7 @@ int main(int argc,  char * const argv[]) {
         if(board.insert_word(word, start, uses)) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
-                expand_from.push_back(cap.second);
+                expand_from.push_back(cap.coord);
             if(board.debug)
                 cout << "\nExpand from " << word << "\n" << expand_from << endl;
             bool result = board.newsolve(expand_from);
@@ -170,22 +178,14 @@ int main(int argc,  char * const argv[]) {
         }
     }
 
-    sort(board.collected_results.begin(),board.collected_results.end());
-    for(auto r : board.collected_results) cout << " " << r;
-    auto last = unique(board.collected_results.begin(),board.collected_results.end());
-    board.collected_results.erase(last,board.collected_results.end());
+    for(auto kv : board.board_counts) {
+        cout << kv.second << " : " << kv.first;
+    }
     
-    cout << "#unique="<<board.collected_results.size()<<"; "
+    cout << "#unique="<<board.boards_seen.size()<<"; "
     << "#computed="<<board.numresults<<"; "
     << "#starts="<<numanswers
     << " for " << unplayed << endl;
-    
-    for(auto r : board.collected_results) cout << r;
-    
-    cout << "#unique="<<board.collected_results.size()<<"; "
-    << "#computed="<<board.numresults<<"; "
-    << "#starts="<<numanswers
-    << " for " << unplayed << endl;
-    
+ 
     return 0;
 }

@@ -17,12 +17,15 @@
 
 
 class Board {
+    
 public:
     int depth;
     vector<vector<char>> board;
     const Dictionary& dictionary;
     vector<char> tiles;
     vector<int> unplayed;
+    unordered_set<string> boards_seen;
+    unordered_map<string,int> board_counts;
 
     char tile_at(const Place& p) const { return board[p.getrow()][p.getcol()]; }
     bool is_char_viable(const char ch, const Place& place) const;
@@ -30,9 +33,9 @@ public:
     bool is_word_at(const string& word, const Place& place);
     bool check_artifacts(const char ch, const Place& place) const;
     
-    void collect(Place, const pair<int,int>&, const string&, char ch, deque<const Place>&);
+    void collect(Place, const Coord&, const string&, char ch, deque<const Place>&);
     bool try_insert(const string& word, const Place& place,
-                    vector<const char_at_pos>& uses);
+                    vector<const CharAtPos>& uses);
     bool check_if_done();
     
 public:
@@ -44,7 +47,7 @@ public:
     const unsigned int numtiles;
     unsigned int output_options;
     int numresults;
-    deque<string> collected_results;
+    int max_results;
     bool debug;
 
     void print(ostream& where) const;
@@ -62,14 +65,15 @@ public:
     numtiles(ntile),
     output_options(1),
     numresults(0),
+    maxresults(1000),
     debug(false) { }
     
     bool newsolve(deque<const Coord>&);
     bool peel(int n=12);
     bool peel(vector<char> letters);
     deque<const Place> word_starts(const string&word, const Coord& coord);
-    bool insert_word(const string& word, const Place& place, vector<const char_at_pos>& uses, bool must_share=false);
-    void revert(vector<const char_at_pos>& uses);
+    bool insert_word(const string& word, const Place& place, vector<const CharAtPos>& uses, bool must_share=false);
+    void revert(vector<const CharAtPos>& uses);
   
     int num_unplayed() const;
     const string show_unplayed() const;
