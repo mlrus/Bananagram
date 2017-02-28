@@ -32,10 +32,6 @@ std::ostream& operator<<(std::ostream& out, const Container<Value, Allocator>& v
     return out;
 }
 
-//std::ostream& operator<<(std::ostream& out, Coord& place);
-//std::ostream& operator<<(std::ostream& out, const Place& place);
-//std::ostream& operator<<(std::ostream& out, const Coord& place);
-//std::ostream& operator<<(std::ostream& out, const CharAtPos& c_a_p);
 std::ostream& operator<<(std::ostream& out, const vector<char>& vec);
 std::ostream& operator<<(std::ostream& out, const vector<vector<char>>& vec);
 

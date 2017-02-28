@@ -46,9 +46,9 @@ public:
     const unsigned int dim;
     const unsigned int numtiles;
     unsigned int output_options;
-    int numresults;
-    int numunique;
-    int max_results;
+    long long numresults;
+    long long numunique;
+    long long max_results;
     bool debug;
 
     void print(ostream& where) const;

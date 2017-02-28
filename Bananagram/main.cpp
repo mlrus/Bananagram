@@ -65,8 +65,8 @@ void usage(char *cmd) {
 
 int dim=256,
     tile_count=21,
-    output_options = 1,
-    max_results = 1000;
+    output_options = 1;
+long long max_results = 1000;
 bool debug = false,
     preserve_order = false,
     shuffle_words = false,
@@ -91,7 +91,7 @@ int parseargs(int argc, char * const argv[]) {
                 break;
             case 'L': initial_letters.assign(optarg);  //TENUEFMDWRIISTLPONEOI
                 break;
-            case 'M': max_results=atoi(optarg);
+            case 'M': max_results=atoll(optarg);
                 break;
             case 'o': output_options=atoi(optarg);
                 break;
@@ -136,11 +136,16 @@ int main(int argc,  char * const argv[]) {
     int rc = parseargs(argc, argv);
     if (rc!=0) return rc;
     cout << "debug=" << boolalpha << debug
-         << "; dim=" << dim
-         << "; tile_count=" << tile_count
-         << "; output_options=" << output_options
-         << "\ndictionary=" << dict_filename
-         << "; initial_letters=" << initial_letters << endl;
+        << "\ndictionary=" << dict_filename
+        << "; dim=" << dim
+        << "; initial_letters=" << initial_letters
+        << "; max_results=" << max_results
+        << "; output_options=" << output_options
+        << "; preserve_order=" << preserve_order
+        << "; shuffle_tiles=" << shuffle_t
+        << "; shuffle_words=" << shuffle_words
+        << "; tile_count=" << tile_count
+        << endl;
     
     Dictionary dictionary(preserve_order,shuffle_words);
     if(!dict_filename.empty())
@@ -178,7 +183,10 @@ int main(int argc,  char * const argv[]) {
     string unplayed(board.show_unplayed());
     cout << unplayed << endl;
 
-    for(string & word : dictionary.words) {
+    vector<string> words(dictionary.words.begin(), dictionary.words.end());
+    std::sort(words.begin(), words.end(), dictionary.cmp_longest);
+    cout << "Considering " << words.size() << " in decreasing size order\n";
+    for(string & word : words) {
         if(board.insert_word(word, start, uses)) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
