@@ -134,9 +134,13 @@ void split(const string& s, char c,
 int main(int argc,  char * const argv[]) {
     showargs(argc, argv);
     int rc = parseargs(argc, argv);
-    if(rc!=0) return rc;
-    cout << "debug="<<boolalpha<<debug<<"; dim="<<dim<<"; tile_count="<<tile_count<<"; output_options="<<output_options<<endl;
-    cout << "dictionary="<<dict_filename<<"; initial_letters="<<initial_letters<<endl;
+    if (rc!=0) return rc;
+    cout << "debug=" << boolalpha << debug
+         << "; dim=" << dim
+         << "; tile_count=" << tile_count
+         << "; output_options=" << output_options
+         << "\ndictionary=" << dict_filename
+         << "; initial_letters=" << initial_letters << endl;
     
     Dictionary dictionary(preserve_order,shuffle_words);
     if(!dict_filename.empty())
@@ -146,17 +150,13 @@ int main(int argc,  char * const argv[]) {
         split(dict_words,',',words);
         dictionary.add_words(words);
     }
-    cout << "WORDS\n";
-    dictionary.dump(cout);
-    cout << "----\n";
 
     vector<char> tiles(initialize_tiles());
     if(shuffle_t) {
-        cout << "Randomizing tiles\n";
+        cout << "Randomizing unplaced tiles\n";
         shuffle_tiles(tiles);
     } else
-        cout << "Not randomizing tiles\n";
-    
+        cout << "Not randomizing unolaced tiles\n";
     
     Board board(dictionary, tiles, dim, tile_count);
     board.debug = debug;
@@ -177,19 +177,18 @@ int main(int argc,  char * const argv[]) {
     vector<const CharAtPos> uses;
     string unplayed(board.show_unplayed());
     cout << unplayed << endl;
-    board.print_debug(cout);
-    cout << board << endl;
+
     for(string & word : dictionary.words) {
         if(board.insert_word(word, start, uses)) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.coord);
-            if(board.debug)
-                cout << "\nExpand from " << word << "\n" << expand_from << endl;
             bool result = board.newsolve(expand_from);
-            if(result) numanswers++;
+            if (!result)
+                cout << "No answer for: " << word << "\n";
+            else
+                numanswers++;
             board.revert(uses);
-            
         }
     }
 
@@ -197,9 +196,9 @@ int main(int argc,  char * const argv[]) {
         cout << kv.second << " : " << kv.first;
     }
     
-    cout << "#unique="<<board.boards_seen.size()<<"; "
-    << "#computed="<<board.numresults<<"; "
-    << "#starts="<<numanswers
+    cout << "#unique=" << board.boards_seen.size()<<"; "
+    << "#computed=" << board.numresults<<"; "
+    << "#starts=" << numanswers
     << " for " << unplayed << endl;
  
     return 0;

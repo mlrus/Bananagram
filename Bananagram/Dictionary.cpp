@@ -17,7 +17,7 @@ void Dictionary::prepare(vector<string>& words) {
                    [](string& s) { return toupper(s); });
     if(!preserve_order) {
         cout << "Sorting words\n";
-        std::sort(words.begin(), words.end(), cmp);
+        std::sort(words.begin(), words.end(), cmp_shortest);
         cout << "Dedup words\n";
         auto last = std::unique(words.begin(), words.end());
         words.erase(last, words.end());
