@@ -7,9 +7,16 @@
 //
 
 /*
- Build: make banana
- Run:   ./banana -W IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT -L BASEDHABTEDIALFOROO -o 4
- Help:  ./banana -h
+ Linux:
+    mkae -C Bananagram clobber
+    make -C Bananagram
+    Bananagram/banana -h
+    Bananagram/banana -W IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT -L BASEDHABTEDIALFOROO
+ Xcode:
+    xcodebuild -project Bananagram.xcodeproj -alltargets clean
+    xcodebuild -project Bananagram.xcodeproj -alltargets
+    build/Release/bananagram -h
+    build/Release/bananagram -W IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT -L BASEDHABTEDIALFOROO
  */
 
 #include <unistd.h>
@@ -66,14 +73,18 @@ void usage(char *cmd) {
 int dim=256,
     tile_count=21,
     output_options = 1;
+
 long long max_results = 1000;
+
 bool debug = false,
     preserve_order = false,
     shuffle_words = false,
     shuffle_t = false;
-string dict_filename;
-string dict_words;      // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
-string initial_letters; // BASEDHABTEDIALFOROO
+
+string dict_filename,
+    dict_words,      // IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT
+    initial_letters; // BASEDHABTEDIALFOROO
+
 int parseargs(int argc, char * const argv[]) {
     int ch;
     while ((ch = getopt(argc, argv, "?hdD:n:F:L:M:o:pPsStTW:")) != -1) {
@@ -131,6 +142,38 @@ void split(const string& s, char c,
     }
 }
 
+vector<char> mk_tiles() {
+    vector<char> tiles(initialize_tiles());
+    if(shuffle_t) {
+        cout << "Randomizing unplaced tiles\n";
+        shuffle_tiles(tiles);
+    } else
+        cout << "Not randomizing unplaced tiles\n";
+    return tiles;
+}
+
+Dictionary mk_dictionary() {
+    Dictionary dictionary(preserve_order,shuffle_words);
+    if(!dict_filename.empty())
+        dictionary.load(dict_filename);
+    if(!dict_words.empty()) {
+        vector<string> words;
+        split(dict_words,',',words);
+        dictionary.add_words(words);
+    }
+    return dictionary;
+}
+
+Board mk_board() {
+    Dictionary dictionary(mk_dictionary());
+    vector<char> tiles(mk_tiles());
+    Board board(dictionary, tiles, dim, tile_count);
+    board.debug = debug;
+    board.output_options=output_options;
+    board.max_results = max_results;
+    return board;
+}
+
 int main(int argc,  char * const argv[]) {
     showargs(argc, argv);
     int rc = parseargs(argc, argv);
@@ -147,47 +190,26 @@ int main(int argc,  char * const argv[]) {
         << "; tile_count=" << tile_count
         << endl;
     
-    Dictionary dictionary(preserve_order,shuffle_words);
-    if(!dict_filename.empty())
-        dictionary.load(dict_filename);
-    if(!dict_words.empty()) {
-        vector<string> words;
-        split(dict_words,',',words);
-        dictionary.add_words(words);
-    }
-
-    vector<char> tiles(initialize_tiles());
-    if(shuffle_t) {
-        cout << "Randomizing unplaced tiles\n";
-        shuffle_tiles(tiles);
-    } else
-        cout << "Not randomizing unolaced tiles\n";
-    
-    Board board(dictionary, tiles, dim, tile_count);
-    board.debug = debug;
-    board.output_options=output_options;
-    board.max_results = max_results;
-    
-    if(initial_letters.empty())
-        board.peel(tile_count);
-    else
-        if(!board.peel(tochar(initial_letters))) {
-            cout << "Cannot assign " << initial_letters << endl;
-            return 1;
-        }
-    
-    const Place start = Place(dim/2, dim/2, Place::Direction::horizontal);
-
     int numanswers = 0;
     vector<const CharAtPos> uses;
-    string unplayed(board.show_unplayed());
-    cout << unplayed << endl;
+    Board board(mk_board());
 
-    vector<string> words(dictionary.words.begin(), dictionary.words.end());
-    std::sort(words.begin(), words.end(), dictionary.cmp_longest);
-    cout << "Considering " << words.size() << " in decreasing size order\n";
-    for(string & word : words) {
+    vector<char> unplaced =
+      initial_letters.empty()?
+      board.peel(tile_count):board.peel(tochar(initial_letters));
+    board.enable_playable_words();
+    
+    cout << "Enabled " << board.dictionary.words.size() << " of " << board.dictionary.all_words.size() <<  " words\n";
+    vector<string> top_words(board.dictionary.words.cbegin(), board.dictionary.words.cend());
+    cout << "Copied " << top_words.size() << " words\n";
+    cout << board.show_unplaced() << endl;
+    
+    const Place start = Place(dim/2, dim/2, Place::Direction::horizontal);
+    std::sort(top_words.begin(), top_words.end(), board.dictionary.cmp_longest);
+    cout << "Considering " << top_words.size() << " in decreasing size order\n";
+    for(string & word : top_words) {
         if(board.insert_word(word, start, uses)) {
+            cout << "Buid from " << word << endl;
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.coord);
@@ -207,7 +229,7 @@ int main(int argc,  char * const argv[]) {
     cout << "#unique=" << board.boards_seen.size()<<"; "
     << "#computed=" << board.numresults<<"; "
     << "#starts=" << numanswers
-    << " for " << unplayed << endl;
+    << " for " << unplaced << endl;
  
     return 0;
 }

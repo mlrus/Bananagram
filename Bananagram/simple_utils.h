@@ -67,11 +67,19 @@ template <class T>
 string
 tobin(T v);
 
-string&
-toupper(std::string &s);
+string
+to_upper(std::string &s);
 
-void
-upperCase(string & in);
+vector<string>
+to_upper(vector<string>&);
+
+const string
+to_upper(const string &s);
+
+vector<const string>
+to_upper(vector<const string>&);
+
+
 
 void
 trim(string& in);

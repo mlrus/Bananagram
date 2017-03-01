@@ -27,27 +27,51 @@
 #include "Board.h"
 #include "Place.h"
 
+TEST(Dummy,Test) {
+    int count = 0;
+    EXPECT_EQ(count,0);
+}
+
 TEST(DictionaryTest,CountsCorrectly) {
     Dictionary d;
     d.add_words({"one","two","three"});
-    EXPECT_EQ(d.words.size(),3);
+    EXPECT_EQ(d.all_words.size(),3);
+    EXPECT_EQ(d.words.size(),0);
+    d.activate_word(d.all_words[0]);
+    
 }
 
 TEST(DictionaryTest,NoDuplicates) {
     Dictionary d;
     d.add_words({"one","two","three"});
     d.add_words({"one","two","three"});
-    EXPECT_EQ(d.words.size(),3);
+    EXPECT_EQ(d.all_words.size(),3);
+    EXPECT_EQ(d.words.size(),0);
 }
 
-TEST(DictionaryTest,Uppercase) {
+TEST(DictionaryTest,Uppercase_exists) {
     Dictionary d;
     vector<string>wlist({"one","two","three","oNe","Two","thrEE"});
     d.add_words(wlist);
-    EXPECT_EQ(d.words.size(),3);
-    EXPECT_EQ(std::count(std::begin(d.words),std::end(d.words),"TWO"),1);
-    EXPECT_TRUE(d.has("ONE"));
+    EXPECT_EQ(d.all_words.size(),3);
+    EXPECT_EQ(d.words.size(),0);
+    EXPECT_EQ(std::count(std::begin(d.all_words),std::end(d.all_words),"TWO"),1);
+    EXPECT_TRUE(d.exists("ONE"));
+    EXPECT_FALSE(d.exists("one"));
+}
+
+TEST(DictionaryTest,Uppercase_has) {
+    Dictionary d;
+    vector<string>wlist({"one","two","three","oNe","Two","thrEE"});
+    d.add_words(wlist);
+    EXPECT_EQ(d.all_words.size(),3);
+    EXPECT_EQ(d.words.size(),0);
+    EXPECT_EQ(std::count(std::begin(d.all_words),std::end(d.all_words),"TWO"),1);
     EXPECT_FALSE(d.has("one"));
+    EXPECT_FALSE(d.has("ONE"));
+    d.activate_word("one");
+    EXPECT_FALSE(d.has("one"));
+    EXPECT_TRUE(d.has("ONE"));
 }
 
 TEST(DictionaryTest,Fail) {
@@ -56,10 +80,66 @@ TEST(DictionaryTest,Fail) {
     EXPECT_FALSE(d.has("one"));
 }
 
+TEST(DictionaryTest,plausibility) {
+    Dictionary d;
+    string word("APPLE");
+    vector<int> counts(d.letter_counts(word));
+    EXPECT_TRUE(d.plausible(word,counts));
+    counts[0]--;
+    EXPECT_FALSE(d.plausible(word,counts));
+    for(int& v : counts) v = 0;
+    string w("XXXXXXXXXXXXXXXXXXXX");
+    counts['X'-'A'] = int(w.length());
+    EXPECT_TRUE(d.plausible(w,counts));
+    w.push_back('X');
+    EXPECT_FALSE(d.plausible(w,counts));
+}
 
-TEST(Foo,Bar) {
-    int count = 0;
-    EXPECT_EQ(count,0);
+TEST(DictionaryTest,verify_plausible) {
+    Dictionary d;
+    vector<char> tiles(initialize_tiles());
+    vector<int> max_peel(26,0);
+    for(char ch : tiles) max_peel[ch - 'A']++;
+    
+    vector<string>ok_words({{"zebraone","zerbratwo","zebrathree","four","five","six"}});
+    vector<string>invalidWords({{"zatsatzetze","juicyjamjot","zatzatza"}});
+    vector<string>all_words(ok_words.begin(), ok_words.end());
+    copy(invalidWords.begin(),invalidWords.end(),back_inserter(all_words));
+    d.add_words(all_words);
+    EXPECT_EQ(max_peel['Z'-'A'],2);
+    EXPECT_EQ(max_peel['J'-'A'],2);
+    
+    for(const string w : ok_words)
+        EXPECT_TRUE(d.plausible(to_upper(w), max_peel));
+    for(const string w : invalidWords)
+        EXPECT_FALSE(d.plausible(to_upper(w), max_peel));
+}
+
+TEST(DictionaryTest,verify_playable) {
+    Dictionary d;
+    vector<char> tiles(initialize_tiles());
+    vector<int> max_peel(26,0);
+    for(char ch : tiles) max_peel[ch - 'A']++;
+    
+    vector<string>ok_words({{"zebraone","zerbratwo","zebrathree","four","five","six"}});
+    vector<string>all_words(ok_words.begin(), ok_words.end());
+    d.add_words(all_words);
+
+    for(const string w: all_words) {
+        ASSERT_TRUE(d.exists(to_upper(w)));
+        ASSERT_FALSE(d.has(to_upper(w)));
+    }
+    
+    vector<string>first_3_words(ok_words.begin(),next(ok_words.begin(),2));
+    vector<string>last_3_words(next(ok_words.begin(),3), ok_words.end());
+
+    ASSERT_TRUE(d.make_playable(first_3_words,max_peel));
+    for(string w : first_3_words) {
+        ASSERT_TRUE(d.has(to_upper(w)));
+    }
+    for(string w : last_3_words) {
+        ASSERT_FALSE(d.has(to_upper(w)));
+    }
 }
 
 TEST(utils,ostream_scalars) {
@@ -167,7 +247,8 @@ TEST(board,accept) {
     std::vector<char> tiles(initialize_tiles());
     Board board(dictionary, tiles);
     vector<char>letters(tochar("THECAT"));
-    if(!board.peel(letters)) {
+    vector<char>peeled(board.peel(letters));
+    if(peeled.size()!=letters.size()) {
         cout << "Cannot assign the letters requested.\n";
         ASSERT_EQ(true,false);
     }
@@ -180,8 +261,23 @@ TEST(board,accept) {
 
 TEST(dictionary,iterator_fw) {
     Dictionary dictionary(true);
+    vector<string>words({{"one","two","three"}});
+    dictionary.add_words(words);
+    dictionary.activate_words(dictionary.all_words);
+    Dictionary::worditerator iter(dictionary.all_words);
+    ASSERT_EQ("ONE",iter.next());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("ONE",iter.begin());
+    ASSERT_EQ("TWO",iter.next());
+    ASSERT_EQ("THREE",iter.next());
+    ASSERT_FALSE(iter.has_next());
+}
+
+TEST(dictionary,iterator_fw_literals) {
+    Dictionary dictionary(true);
     dictionary.add_words({{"one","two","three"}});
-    Dictionary::worditerator iter(dictionary.words);
+    dictionary.activate_words(dictionary.all_words);
+    Dictionary::worditerator iter(dictionary.all_words);
     ASSERT_EQ("ONE",iter.next());
     ASSERT_EQ("TWO",iter.next());
     ASSERT_EQ("ONE",iter.begin());
@@ -193,7 +289,7 @@ TEST(dictionary,iterator_fw) {
 TEST(dictionary,iterator_bw) {
     Dictionary dictionary(true);
     dictionary.add_words({{"one","two","three"}});
-    Dictionary::worditerator iter(dictionary.words,false);
+    Dictionary::worditerator iter(dictionary.all_words,false);
     ASSERT_EQ("THREE",iter.next());
     ASSERT_EQ("TWO",iter.next());
     ASSERT_EQ("THREE",iter.begin());
@@ -246,9 +342,7 @@ TEST(dictionary,iterator_bw) {
  14 | _________________
  15 | _________________
  16 | _________________
- 
  */
-
 
 Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO",
                    vector<string> vocab={"IF","AFT","ALOES","TEAR", "HIT","DO","FOE","BARD","DO","BASH","JOT"},
@@ -256,16 +350,16 @@ Board define_board(string letterstring="BASEDHABITJOTTEDIALFFOROO",
     cout << "=================\n";
     Dictionary dictionary(false);
     dictionary.add_words(vocab);
-    dictionary.dump(cout);
     std::vector<char> tiles(initialize_tiles());
     Board board(dictionary, tiles, dim);
     board.debug = false;
-    if(!board.peel(tochar(letterstring))) {
+    cout << "define_board::board.dictionary.all_words size is " <<
+    dictionary.all_words.size() << " = " << board.dictionary.all_words.size() << endl;
+    if(board.peel(tochar(letterstring)).size()!=letterstring.size()) {
         cout << "Cannot assign the letters requested.\n";
     }
     return board;
 }
-
 
 bool run_board_test(Board& board, vector<pair<string,Coord>>& test_set, bool trace=false) {
     vector<const CharAtPos>uses;
@@ -294,9 +388,10 @@ bool run_board_test(Board& board, vector<pair<string,Coord>>& test_set, bool tra
     return any;
 }
 
-#if 0
 TEST(board,collect_a) {
+    cout << "collect_a\n";
     Board board(define_board());
+    cout <<"_\n";
     vector<const CharAtPos> uses;
     
     vector<pair<string,Coord>> test_set({
@@ -320,6 +415,34 @@ TEST(board,collect_b) {
     cout << board;
     ASSERT_TRUE(run_board_test(board, test_set, true));
 }
+
+
+TEST(board,peeling) {
+    string initial_letters("IFHT");
+    /* Only words 'IF' and 'HIT' are formed from te given letters. */
+    Board board(define_board(initial_letters));
+    for(auto w : board.dictionary.all_words) {
+        EXPECT_TRUE(board.dictionary.exists(w));
+        EXPECT_FALSE(board.dictionary.has(w));
+    }
+    board.enable_playable_words();
+    for(auto w : board.dictionary.all_words)
+        cout <<w<<" exists=" << boolalpha << board.dictionary.exists(w) << " has=" << boolalpha<< board.dictionary.has(w) << "\n";
+    ASSERT_TRUE(board.dictionary.has("IF"));       // active
+    ASSERT_TRUE(board.dictionary.has("HIT"));      // active
+    ASSERT_TRUE(board.dictionary.exists("AFT"));   // exists (not active)
+    ASSERT_FALSE(board.dictionary.has("AFT"));     // not active
+    ASSERT_FALSE(board.dictionary.has("TAF"));     // not active ...
+    ASSERT_FALSE(board.dictionary.exists("TAF"));  // ... or existing
+    ASSERT_TRUE(board.peel('A').size()==1);        // This activates AFT
+    board.enable_playable_words();
+    ASSERT_TRUE(board.dictionary.has("IF"));
+    ASSERT_TRUE(board.dictionary.has("HIT"));
+    ASSERT_TRUE(board.dictionary.has("IF"));
+    ASSERT_TRUE(board.dictionary.has("AFT"));
+    ASSERT_FALSE(board.dictionary.has("TAF"));
+}
+
 
 TEST(board,fitting_001) {
     {
@@ -347,8 +470,6 @@ TEST(board,fitting_001) {
     cout << board << endl;
     }
 }
-#endif
-
 
 TEST(board,fitting_002) {
     Board board(define_board("CACAT",{"CAT","TAC"}));
@@ -367,3 +488,4 @@ TEST(board,fitting_002) {
     ASSERT_TRUE(run_board_test(board, test_set, true));
     cout << board << endl;
 }
+

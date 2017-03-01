@@ -94,12 +94,6 @@ unique_name(const std::string & base)
     return name;
 }
 
-string& toupper(std::string &s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c) { return std::toupper(c); });
-    return s;
-}
-
 template <template <typename,typename> class C=std::list, typename E=std::string, typename A=std::allocator<std::string>>
 void
 rvec(const std::string & name, C<E,A> &dat)
@@ -130,11 +124,37 @@ tobin(T v)
     return res;
 }
 
-void
-upperCase(string& in) {
-    for(string::iterator p = in.begin(); p != in.end(); p++)
-        *p = toupper(*p);
+string
+to_upper(std::string &s) {
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c) { return std::toupper(c); });
+    return s;
 }
+
+const string
+to_upper(const std::string &s) {
+    string upper;
+    std::transform(s.begin(), s.end(), back_inserter(upper),
+                   [](unsigned char c) { return std::toupper(c); });
+    return upper;
+}
+
+vector<string>
+to_upper(vector<string>& words) {
+    transform(words.begin(), words.end(), words.begin(),
+              [](string s) { return to_upper(s); });
+    return words;
+}
+
+vector<const string>
+to_upper(vector<const string>& words) {
+    vector<const string> res(words.begin(),words.end());
+    transform(words.begin(), words.end(), back_inserter(res),
+              [](const string s) { return to_upper(s); });
+    return res;
+}
+
+
 
 void trim(string& str) {
     size_t start = str.find_first_not_of(" \t\r\n");

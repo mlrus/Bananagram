@@ -21,9 +21,10 @@ class Board {
 public:
     int depth;
     vector<vector<char>> board;
-    const Dictionary& dictionary;
+    Dictionary dictionary;
     vector<char> tiles;
-    vector<int> unplayed;
+    vector<int> counts_unseen;
+    vector<int> unplaced;
     unordered_set<string> boards_seen;
     unordered_map<string,int> board_counts;
 
@@ -61,24 +62,31 @@ public:
     board(vector<vector<char>>(d+1,vector<char>(d+1,'_'))),
     dictionary(dictionary),
     tiles(tiles),
-    unplayed(vector<int>(26, 0)),
+    counts_unseen(vector<int>(26, 0)),
+    unplaced(vector<int>(26, 0)),
     dim(d),
     numtiles(ntile),
     output_options(1),
     numresults(0),
     numunique(0),
     max_results(1000),
-    debug(false) { }
+    debug(false) {
+        for(char ch : tiles) counts_unseen[ch-'A']++;
+    }
+
     
     bool newsolve(deque<const Coord>&);
-    bool peel(int n=12);
-    bool peel(vector<char> letters);
+    void unpeel(char ch);
+    vector<char> peel(char ch);
+    vector<char> peel(int n=12);
+    vector<char> peel(vector<char> letters);
+    void enable_playable_words();
     deque<const Place> word_starts(const string&word, const Coord& coord);
     bool insert_word(const string& word, const Place& place, vector<const CharAtPos>& uses, bool must_share=false);
     void revert(vector<const CharAtPos>& uses);
   
-    int num_unplayed() const;
-    const string show_unplayed() const;
+    int num_unplaced() const;
+    const string show_unplaced() const;
     
     bool empty_row(int n) const;
     bool empty_col(int n) const;

@@ -13,21 +13,25 @@
 #include <string>
 #include <unordered_set>
 #include <utility>
+#include <functional>
 #include <vector>
 
-using std::string;
-using std::cout;
-using std::endl;
-using std::flush;
-using std::ostream;
-using std::vector;
-using std::unordered_set;
+using namespace std;
 
 class Dictionary {
-    void prepare(vector<string>& words);
+public:
+    void prepare(vector<string>& words, unordered_set<string>& wordset);
+    void activate_word(string&);
+    void activate_word(const string&);
+    void activate_words(vector<string>&);
+    void deactivate_word(string&);
     bool preserve_order;
     bool shuffle_words;
+    vector<int> letter_counts(const string&);
+    
+    bool plausible(const string&, const vector<int>&);
 public:
+
     struct {
         bool operator()(const string& a, const string& b) {
             long s = a.size() - b.size();
@@ -45,17 +49,27 @@ public:
         }
     } cmp_longest;
 
+    vector<string>all_words;
+    unordered_set<string> all_wordset;
     vector<string> words;
     unordered_set<string> wordset;
-    Dictionary(bool ordered=false, bool shuffled=true) : preserve_order(ordered), shuffle_words(shuffled) {}
-    virtual ~Dictionary();
+    
+    Dictionary(bool ordered=false, bool shuffled=true) : preserve_order(ordered), shuffle_words(shuffled) { }
+
     void load(const string&);
     void add_words(const vector<string>&);
+    bool make_playable(vector<string>& words, vector<int>& unplaced, bool incremental = false);
     unsigned long size() { return words.size(); }
     bool has(const string& word) const;
-    void dump(ostream&);
+    bool exists(const string& word) const;
+    void dump(ostream&,bool=false);
+    bool pred(int a, int b) {
+        bool res = a == 0 || (a >= b);
+        cout << "compare("<<a<<","<<b<<")="<<res<<endl;
+        return res;
+    }
     
-    
+    //TODO: fully comply with iterator requirements
     class worditerator {
         const vector<string>& words;
         vector<string>::const_iterator it;
