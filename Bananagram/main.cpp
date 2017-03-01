@@ -17,6 +17,8 @@
     xcodebuild -project Bananagram.xcodeproj -alltargets
     build/Release/bananagram -h
     build/Release/bananagram -W IF,AFT,ALOES,TEAR,HIT,DO,FOE,BARD,DO,BASH,JOT -L BASEDHABTEDIALFOROO
+
+    build/Release/bananagram -F TestData/google-10000-english-usa.txt -S -T -M 100000
  */
 
 #include <unistd.h>
