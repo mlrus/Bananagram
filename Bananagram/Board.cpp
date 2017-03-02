@@ -6,57 +6,58 @@
 //  Copyright © 2017 Michah Lerner. All rights reserved.
 //
 
-#include <numeric>
 #include <iostream>
 #include <iomanip>
+#include <deque>
+#include <functional>
+#include <iterator>
+#include <list>
+#include <numeric>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+
 #include "Board.h"
-#include "Place.h"
-#include "simple_utils.h"
+
 
 using namespace std;
 
+static const char POS_UNUSED = '_';
 
 bool Board::newsolve(deque<const Coord> &expanders) {
     depth++;
-    if(debug)
+    if(debug) {
         cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders.\n";
-    if(debug)
         print_debug(cout);
-    //if(debug) cout << expanders;
-    if(check_if_done()) {
-        depth--;
-        return true;
+        cout << expanders;
     }
-
-    vector<const CharAtPos> uses;
+    
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
         // for(auto word : dictionary.words) {
-        // Alternate word order between layers.
         Dictionary::worditerator words(dictionary.words,depth%2==0);
-        for(auto word = words.begin(); words.has_next(); word = words.next()) {
-            deque<const Place> new_expandables = word_starts(word,coord);
-            if(!new_expandables.empty()) {
-                for(const Place expand_at : new_expandables) {
-                    if(insert_word(word, expand_at, uses)) {
-                        if(!check_if_done()) {
-                            deque<const Coord> expand_again(expanders.begin(),expanders.end()); // tail of expanders
-                            for(const CharAtPos cap : uses) // letters just added
-                                expand_again.push_front(cap.coord);
-                            if(!newsolve(expand_again)) {   // (early exit hook)
-                                depth--;
-                                return false;
-                            }
-                        }
-                        revert(uses);
-                        if(numunique >= max_results) {
-                            depth--;
-                            return false;
-                        }
+        for(auto word = words.begin(); words.has_next() && numunique < max_results; word = words.next()) {
+            deque<const Place> word_expand = word_starts(word,coord);
+            if(debug) {
+                cout << "\n+consider " << word;
+                cout << " " << word_expand.size() << " expanders\n";
+                print_debug(cout);
+            }
+            for(const Place expand_at : word_expand) {
+                vector<const CharAtPos> uses;
+                if(insert_word(word, expand_at, uses)) {
+                    if(!is_solution()) {
+                        deque<const Coord> expand_again(expanders.begin(),expanders.end());
+                        for(const CharAtPos cap : uses)
+                            expand_again.push_front(cap.coord);
+                        newsolve(expand_again);
                     }
+                    revert(uses);
                 }
             }
         }
@@ -65,41 +66,43 @@ bool Board::newsolve(deque<const Coord> &expanders) {
     return true;
 }
 
-bool Board::check_if_done() {
-    if(num_unplaced()==0) {
-        numresults++;
-        ostringstream ostr;
-        print_std(ostr);
-        string st(ostr.str());
-        if(boards_seen.count(st)==0) {
-            boards_seen.insert(st);
-            numunique++;
-            cout << setw(30) << " " << "total=" << numresults
-            << " unique=" << numunique
-            << " (" << trunc(0.5 + 100.0 * numunique / numresults) << "%)\n"
-            << st << "\n";
-        }
-        ostr.str("");
-        print_machine(ostr);
-        board_counts[ostr.str()]++;
-        
+bool Board::is_new_solution() {
+    ostringstream ostr;
+    print_machine(ostr);
+    string st(ostr.str());
+    if(boards_seen.count(st)==0) {
+        boards_seen.insert(st);
+        numunique++;
         return true;
     }
     return false;
 }
 
+bool Board::is_solution() {
+    if(num_unplaced()!=0)
+        return false;
+    numresults++;
+    if(is_new_solution())
+    if(is_new_solution()) {
+        print_std(cout);
+    }
+    ostringstream ostr;
+    print_machine(ostr);
+    board_counts[ostr.str()]++;
+    
+    return true;
+}
+
 void Board::revert(vector<const CharAtPos>& uses) {
-    if(uses.size()==0) return;
-    for(CharAtPos used : uses) {
-        char ch = used.dir;
-        Coord c = used.coord;
+    while(!uses.empty()) {
+        char ch = uses.back().dir;
+        Coord c = uses.back().coord;
         ushort x = c.row;
         ushort y = c.col;
         board[x][y] = POS_UNUSED;
         unplaced[ch-'A']++;
+        uses.pop_back();
     }
-    std::vector<const CharAtPos>().swap(uses);
-    uses.clear();
 }
 
 
@@ -134,7 +137,6 @@ deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
     collect(Place(coord,horz), Place::right, word, ch, result);
     collect(Place(coord,vert), Place::up, word, ch, result);
     collect(Place(coord,vert), Place::down, word, ch, result);
-
     return result;
 }
 

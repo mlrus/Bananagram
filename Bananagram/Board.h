@@ -10,8 +10,9 @@
 #define Board_h
 
 #include <deque>
+
 #include "simple_utils.h"
-#include "defs.h"
+#include "charAtPos.h"
 #include "Dictionary.h"
 #include "Place.h"
 
@@ -37,7 +38,8 @@ public:
     void collect(Place, const Coord&, const string&, char ch, deque<const Place>&);
     bool try_insert(const string& word, const Place& place,
                     vector<const CharAtPos>& uses);
-    bool check_if_done();
+    bool is_solution();
+    bool is_new_solution();
     
 public:
     static const bool as_row = true;
@@ -74,7 +76,6 @@ public:
         for(char ch : tiles) counts_unseen[ch-'A']++;
     }
 
-    
     bool newsolve(deque<const Coord>&);
     void unpeel(char ch);
     vector<char> peel(char ch);

@@ -9,13 +9,7 @@
 #ifndef Place_h
 #define Place_h
 
-#include <iostream>
-#include <stdexcept>
-#include <string>
 #include <unordered_map>
-#include <algorithm>
-
-//#include "defs.h"
 
 #include "Coord.h"
 

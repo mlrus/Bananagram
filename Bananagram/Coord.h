@@ -9,8 +9,6 @@
 #ifndef Coord_h
 #define Coord_h
 
-#include <algorithm>
-
 class Coord {
 public:
     int row;

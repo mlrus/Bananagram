@@ -21,7 +21,6 @@
 #include <utility>
 #include <vector>
 
-#include "defs.h"
 #include "simple_utils.h"
 #include "Dictionary.h"
 #include "Board.h"

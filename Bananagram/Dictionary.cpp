@@ -6,8 +6,15 @@
 //  Copyright © 2017 Michah Lerner. All rights reserved.
 //
 
+#include <iostream>
 #include <chrono>
+#include <functional>
 #include <random>
+#include <string>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+
 #include "Dictionary.h"
 #include "simple_utils.h"
 

@@ -6,17 +6,8 @@
 //  Copyright © 2017 Michah Lerner. All rights reserved.
 //
 
-#include <iostream>
-#include <ostream>
-#include <sstream>
-#include <iterator>
-#include <list>
-#include <vector>
-#include <deque>
-#include <string>
-#include <unordered_map>
 
-#include "defs.h"
+#include <ostream>
 #include "CharAtPos.h"
 
 std::ostream&

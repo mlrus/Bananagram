@@ -6,8 +6,13 @@
 //  Copyright © 2017 Michah Lerner. All rights reserved.
 //
 
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
 #include "Place.h"
-#include "Coord.h"
+
 std::unordered_map<int, std::string> Place::PlaceNames { { Place::Direction::horizontal, "horz" },
     { Place::Direction::vertical, "vert" }};
 

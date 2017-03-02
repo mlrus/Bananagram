@@ -9,16 +9,12 @@
 #ifndef __simple_utils__
 #define __simple_utils__
 
-#include <iostream>
-#include <sstream>
-#include <iterator>
-#include <list>
-#include <vector>
-#include <deque>
-#include <string>
-#include <unordered_map>
 
-#include "defs.h"
+#include <ostream>
+#include <string>
+#include <vector>
+
+#include "Board.h"
 #include "Place.h"
 #include "Coord.h"
 #include "CharAtPos.h"
@@ -78,8 +74,6 @@ to_upper(const string &s);
 
 vector<const string>
 to_upper(vector<const string>&);
-
-
 
 void
 trim(string& in);

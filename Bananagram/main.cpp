@@ -35,7 +35,6 @@
 #include <utility>
 #include <vector>
 
-#include "defs.h"
 #include "simple_utils.h"
 #include "Dictionary.h"
 #include "Board.h"
@@ -173,7 +172,22 @@ Board mk_board() {
     board.debug = debug;
     board.output_options=output_options;
     board.max_results = max_results;
+    
+    if(initial_letters.empty())  {
+        board.peel(tile_count);
+    } else {
+        board.peel(tochar(initial_letters));
+    }
+    board.enable_playable_words();
+    
     return board;
+}
+
+void describe_rslt(const Board &board, const string& word, long long numunique, long long numresults) {
+    numunique = board.numunique - numunique;
+    numresults = board.numresults - numresults;
+    string cnts(numresults==0?"none":(to_string(numunique)+"/"+to_string(numresults)));
+    cout << "(unique/count)=" << left << setw(10) << cnts << " " << word << "\n";
 }
 
 int main(int argc,  char * const argv[]) {
@@ -192,34 +206,30 @@ int main(int argc,  char * const argv[]) {
         << "; tile_count=" << tile_count
         << endl;
     
+    Board board(mk_board());
+    string start_condition = board.show_unplaced();
+
+    vector<string> top_words(board.dictionary.words.cbegin(), board.dictionary.words.cend());
+    std::sort(top_words.begin(), top_words.end(), board.dictionary.cmp_longest);
+    cout << "Use " << board.dictionary.words.size() << " of " << board.dictionary.all_words.size() <<  " words\n"
+    << "Starting condition: " << start_condition << endl;
+    
     int numanswers = 0;
     vector<const CharAtPos> uses;
-    Board board(mk_board());
-
-    vector<char> unplaced =
-      initial_letters.empty()?
-      board.peel(tile_count):board.peel(tochar(initial_letters));
-    board.enable_playable_words();
+    const Place start = Place(board.dim/2, board.dim/2, Place::Direction::horizontal);
     
-    cout << "Enabled " << board.dictionary.words.size() << " of " << board.dictionary.all_words.size() <<  " words\n";
-    vector<string> top_words(board.dictionary.words.cbegin(), board.dictionary.words.cend());
-    cout << "Copied " << top_words.size() << " words\n";
-    cout << board.show_unplaced() << endl;
-    
-    const Place start = Place(dim/2, dim/2, Place::Direction::horizontal);
-    std::sort(top_words.begin(), top_words.end(), board.dictionary.cmp_longest);
-    cout << "Considering " << top_words.size() << " in decreasing size order\n";
     for(string & word : top_words) {
         if(board.insert_word(word, start, uses)) {
-            cout << "Buid from " << word << endl;
+            long long numunique = board.numunique;
+            long long numresults = board.numresults;
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.coord);
-            bool result = board.newsolve(expand_from);
-            if (!result)
-                cout << "No answer for: " << word << "\n";
-            else
-                numanswers++;
+            bool normal = board.newsolve(expand_from);
+            describe_rslt(board, word, numunique, numresults);
+            if(!normal || board.numunique >= board.max_results)
+                break;
+            numanswers++;
             board.revert(uses);
         }
     }
@@ -228,10 +238,12 @@ int main(int argc,  char * const argv[]) {
         cout << kv.second << " : " << kv.first;
     }
     
-    cout << "#unique=" << board.boards_seen.size()<<"; "
-    << "#computed=" << board.numresults<<"; "
-    << "#starts=" << numanswers
-    << " for " << unplaced << endl;
+    cout << "#requested=" << board.max_results
+    << "; #unique=" << board.boards_seen.size()
+    << "; #computed=" << board.numresults
+    << "; #starts=" << numanswers
+    << " for " << start_condition << endl;
  
     return 0;
 }
+

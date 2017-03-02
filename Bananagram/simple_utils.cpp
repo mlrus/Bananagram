@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Michah Lerner. All rights reserved.
 //
 
+#include <ostream>
+#include <iomanip>
 #include <algorithm>
 #include <fstream>
 #include <sys/stat.h>
@@ -13,12 +15,14 @@
 #include <libgen.h>
 #include <unistd.h>
 #include <chrono>
+#include <deque>
+#include <list>
+#include <vector>
+#include <string>
 #include <random>
-#include <iomanip>
+#include <vector>
 
 #include "simple_utils.h"
-#include "Board.h"
-#include "Place.h"
 
 using std::string;
 using std::vector;

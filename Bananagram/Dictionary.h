@@ -10,28 +10,29 @@
 #define Dictionary_h
 
 #include <iostream>
-#include <string>
 #include <unordered_set>
-#include <utility>
-#include <functional>
-#include <vector>
 
 using namespace std;
 
 class Dictionary {
 public:
-    void prepare(vector<string>& words, unordered_set<string>& wordset);
+    bool plausible(const string&, const vector<int>&);
+    
     void activate_word(string&);
     void activate_word(const string&);
     void activate_words(vector<string>&);
     void deactivate_word(string&);
+    void prepare(vector<string>& words, unordered_set<string>& wordset);
     bool preserve_order;
     bool shuffle_words;
     vector<int> letter_counts(const string&);
-    
-    bool plausible(const string&, const vector<int>&);
-public:
 
+public:
+    vector<string>all_words;
+    unordered_set<string> all_wordset;
+    vector<string> words;
+    unordered_set<string> wordset;
+    
     struct {
         bool operator()(const string& a, const string& b) {
             long s = a.size() - b.size();
@@ -49,10 +50,7 @@ public:
         }
     } cmp_longest;
 
-    vector<string>all_words;
-    unordered_set<string> all_wordset;
-    vector<string> words;
-    unordered_set<string> wordset;
+  
     
     Dictionary(bool ordered=false, bool shuffled=true) : preserve_order(ordered), shuffle_words(shuffled) { }
 
