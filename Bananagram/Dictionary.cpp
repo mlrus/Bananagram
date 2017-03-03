@@ -101,6 +101,38 @@ bool Dictionary::plausible(const string& word, const vector<int>& unplaced) {
     return distance(p.first,counts.end())==0;
 }
 
+/*
+ * Return true if any set bit of "nzcounts" corresponds to a char of "word".
+ */
+bool Dictionary::shared_ch(const string& word, const unsigned int nzmask) {
+    unsigned int bitmask = charmask(word);
+    return (nzmask & bitmask) != 0;
+}
+
+/* 
+ * Set bit_i if ch-'A' is set.
+ */
+unsigned int Dictionary::charmask(const string& word) {
+    unsigned int nzmask = 0;
+    for(unsigned char ch : word)
+        nzmask |= 0x01 << (ch - 'A');
+    return nzmask;
+}
+
+/*
+ * Set bit_i if count(vector[i]) is nonzero.
+ */
+unsigned int Dictionary::mkbinary(const vector<int>& avail) {
+    unsigned int
+        nzcounts = 0,
+        bzero    = 0x01;
+    for(auto v : avail) {
+        if (v) nzcounts |= bzero;
+        bzero = bzero << 1;
+    }
+    return nzcounts;
+}
+
 bool Dictionary::make_playable(vector<string>& words_to_enable, vector<int>& unplaced, bool incremental) {
     if(incremental) throw runtime_error("Dictionary::make_playable is unimplmented\n");
     words.clear();

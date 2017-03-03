@@ -29,6 +29,7 @@ public:
     unordered_set<string> boards_seen;
     unordered_map<string,int> board_counts;
 
+    vector<string>words_for_unplaced(vector<string>&);
     char tile_at(const Place& p) const { return board[p.getrow()][p.getcol()]; }
     bool is_char_viable(const char ch, const Place& place) const;
     bool is_word_viable(const string& word, const Place& place) const;
@@ -76,7 +77,7 @@ public:
         for(char ch : tiles) counts_unseen[ch-'A']++;
     }
 
-    bool newsolve(deque<const Coord>&);
+    bool newsolve(deque<const Coord>&, vector<string>&);
     void unpeel(char ch);
     vector<char> peel(char ch);
     vector<char> peel(int n=12);

@@ -28,7 +28,17 @@ using namespace std;
 
 static const char POS_UNUSED = '_';
 
-bool Board::newsolve(deque<const Coord> &expanders) {
+vector<string>
+Board::words_for_unplaced(vector<string>& words) {
+    vector<string>words_at_level;
+    for(auto word : words)
+        if(dictionary.shared_ch(word,Dictionary::mkbinary(unplaced)))
+            words_at_level.push_back(word);
+    return words_at_level;
+}
+
+bool
+Board::newsolve(deque<const Coord> &expanders, vector<string>& words_to_use) {
     depth++;
     if(debug) {
         cout << "DEPTH " << depth <<" newsolve has " << expanders.size() << " expanders.\n";
@@ -36,18 +46,16 @@ bool Board::newsolve(deque<const Coord> &expanders) {
         cout << expanders;
     }
     
+    vector<string>words_at_level = words_for_unplaced(words_to_use);
+    if(words_at_level.empty())
+        return true;
+    
     while(!expanders.empty()) {
         Coord coord(expanders.front());
         expanders.pop_front();
-        // for(auto word : dictionary.words) {
-        Dictionary::worditerator words(dictionary.words,depth%2==0);
+        Dictionary::worditerator words(words_at_level,depth%2==0);
         for(auto word = words.begin(); words.has_next() && numunique < max_results; word = words.next()) {
             deque<const Place> word_expand = word_starts(word,coord);
-            if(debug) {
-                cout << "\n+consider " << word;
-                cout << " " << word_expand.size() << " expanders\n";
-                print_debug(cout);
-            }
             for(const Place expand_at : word_expand) {
                 vector<const CharAtPos> uses;
                 if(insert_word(word, expand_at, uses)) {
@@ -55,18 +63,20 @@ bool Board::newsolve(deque<const Coord> &expanders) {
                         deque<const Coord> expand_again(expanders.begin(),expanders.end());
                         for(const CharAtPos cap : uses)
                             expand_again.push_front(cap.coord);
-                        newsolve(expand_again);
+                        newsolve(expand_again,words_at_level);
                     }
                     revert(uses);
                 }
             }
         }
     }
+    
     depth--;
     return true;
 }
 
-bool Board::is_new_solution() {
+bool
+Board::is_new_solution() {
     ostringstream ostr;
     print_machine(ostr);
     string st(ostr.str());
@@ -78,12 +88,13 @@ bool Board::is_new_solution() {
     return false;
 }
 
-bool Board::is_solution() {
+bool
+Board::is_solution() {
     if(num_unplaced()!=0)
         return false;
     numresults++;
-    if(is_new_solution())
     if(is_new_solution()) {
+        cout << setw(32)<<" "<<"(unique/all)="<<numunique<<"/"<<numresults<<endl;
         print_std(cout);
     }
     ostringstream ostr;
@@ -93,7 +104,8 @@ bool Board::is_solution() {
     return true;
 }
 
-void Board::revert(vector<const CharAtPos>& uses) {
+void
+Board::revert(vector<const CharAtPos>& uses) {
     while(!uses.empty()) {
         char ch = uses.back().dir;
         Coord c = uses.back().coord;
@@ -105,8 +117,8 @@ void Board::revert(vector<const CharAtPos>& uses) {
     }
 }
 
-
-void Board::collect(Place p, const Coord& step, const string& word, char ch, deque<const Place>& result) {
+void
+Board::collect(Place p, const Coord& step, const string& word, char ch, deque<const Place>& result) {
     if(step.row<0||step.col<0) {
         string::const_iterator it = word.cbegin();
         p+=step;
@@ -130,7 +142,8 @@ void Board::collect(Place p, const Coord& step, const string& word, char ch, deq
     }
 }
 
-deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
+deque<const Place>
+Board::word_starts(const string& word, const Coord& coord) {
     deque<const Place> result;
     const char ch = board[coord.row][coord.col];
     collect(Place(coord,horz), Place::left, word, ch, result);
@@ -140,7 +153,8 @@ deque<const Place> Board::word_starts(const string& word, const Coord& coord) {
     return result;
 }
 
-bool Board::is_char_viable(const char ch, const Place& place) const {
+bool
+Board::is_char_viable(const char ch, const Place& place) const {
     if(debug && (place.coord.row==0 || place.coord.row==dim-1 || place.coord.col==0 || place.coord.col==dim-1))
         throw runtime_error("Invalid position "
                             + to_string(place.coord.row) + ","
@@ -148,7 +162,8 @@ bool Board::is_char_viable(const char ch, const Place& place) const {
     return (unplaced[ch-'A'] > 0 && tile_at(place) == POS_UNUSED && check_artifacts(ch, place));
 }
 
-bool Board::is_word_viable(const string& word, const Place& place) const {
+bool
+Board::is_word_viable(const string& word, const Place& place) const {
     if(place.is_row()) {
         if(tile_at(place+Place::left) != POS_UNUSED ||
            place.coord.col + word.length() >= dim ||
@@ -165,7 +180,8 @@ bool Board::is_word_viable(const string& word, const Place& place) const {
     return true;
 }
 
-bool Board::is_word_at(const string& word, const Place& place) {
+bool
+Board::is_word_at(const string& word, const Place& place) {
     Place here(place);
     for(char ch : word) {
         if(tile_at(here++) != ch) {
@@ -178,11 +194,14 @@ bool Board::is_word_at(const string& word, const Place& place) {
 /*
  Intersect the word to the board, saving changes to "uses".
  */
-bool Board::try_insert(const string& word, const Place& place, vector<const CharAtPos>& uses) {
+bool
+Board::try_insert(const string& word, const Place& place, vector<const CharAtPos>& uses) {
     return insert_word(word,place,uses,true);
 }
 
-// Check the word which is perpendicular to place
+/*
+ * Check the word which is perpendicular to place.
+ */
 bool
 Board::check_artifacts(char ch, const Place& place) const {
     Place::Direction perpendicular =
@@ -210,7 +229,8 @@ Board::check_artifacts(char ch, const Place& place) const {
 
 
 /* Initialize the board with the given word */
-bool Board::insert_word(const string& word, const Place& place, vector<const CharAtPos>& uses, bool must_share) {
+bool
+Board::insert_word(const string& word, const Place& place, vector<const CharAtPos>& uses, bool must_share) {
     if(!is_word_viable(word,place)) //assuming this makes it faster, but maybe not
         return false;
     Place here(place);
@@ -239,7 +259,8 @@ bool Board::insert_word(const string& word, const Place& place, vector<const Cha
 }
 
 
-const string Board::show_unplaced() const {
+const string
+Board::show_unplaced() const {
     std::stringstream result;
     for(int i = 0; i < unplaced.size(); i++) {
         if(unplaced[i] > 0)
@@ -248,56 +269,66 @@ const string Board::show_unplaced() const {
     return result.str();
 }
 
-int Board::num_unplaced() const { return std::accumulate(unplaced.cbegin(),unplaced.cend(),0); }
+int
+Board::num_unplaced() const { return std::accumulate(unplaced.cbegin(),unplaced.cend(),0); }
 
-bool Board::empty_row(int i) const {
+bool
+Board::empty_row(int i) const {
     for(int j=0; j < dim; j++)
         if(board[i][j] != POS_UNUSED)
             return false;
     return true;
 }
 
-bool Board::empty_col(int j) const {
+bool
+Board::empty_col(int j) const {
     for(int i=0; i < dim; i++)
         if(board[i][j] != POS_UNUSED)
             return false;
     return true;
 }
 
-int Board::first_nonempty_row() const {
+int
+Board::first_nonempty_row() const {
     for(int i=0;i<dim;i++)
         if(!empty_row(i)) return i;
     return -1;
 }
 
-int Board::last_nonempty_row() const {
+int
+Board::last_nonempty_row() const {
     for(int i=dim-1; i>=0; i--)
         if(!empty_row(i)) return i;
     return -1;
 }
 
 
-int Board::first_nonempty_col() const {
+int
+Board::first_nonempty_col() const {
     for(int i=0;i<dim;i++)
         if(!empty_col(i)) return i;
     return -1;
 }
 
-int Board::last_nonempty_col() const {
+int
+Board::last_nonempty_col() const {
     for(int i=dim-1; i>=0; i--)
         if(!empty_col(i)) return i;
     return -1;
 }
 
-bool Board::empty() const {
+bool
+Board::empty() const {
     return first_nonempty_row()<0 || first_nonempty_col()<0;
 }
 
-void Board::enable_playable_words() {
+void
+Board::enable_playable_words() {
     dictionary.make_playable(dictionary.all_words,unplaced);
 }
 
-void Board::unpeel(char ch) {
+void
+Board::unpeel(char ch) {
     tiles.push_back(ch);
     counts_unseen[ch - 'A']++;
     unplaced[ch - 'A']--;
@@ -305,7 +336,8 @@ void Board::unpeel(char ch) {
         throw runtime_error("Invalid unpeel of unplayed tile.");
 }
 
-vector<char> Board::peel(char ch) {
+vector<char>
+Board::peel(char ch) {
     vector<char> result;
     //cout << "peel '" << ch << "' from " << tiles.size() << " tiles, ";
     vector<char>::const_iterator where=std::find(tiles.begin(),tiles.end(),ch);
@@ -318,7 +350,8 @@ vector<char> Board::peel(char ch) {
     return result;
 }
 
-vector<char> Board::peel(int n) {
+vector<char>
+Board::peel(int n) {
     vector<char> result;
     //std::random_shuffle(tiles.begin(), tiles.end());
     for(int i = 0; i < n && tiles.size() > 0 ; i++) {
@@ -332,7 +365,8 @@ vector<char> Board::peel(int n) {
     return result;
 }
 
-vector<char> Board::peel(vector<char> letters) {
+vector<char>
+Board::peel(vector<char> letters) {
     vector<char>result;
     for(char ch : letters) {
         vector<char>::const_iterator where=std::find(tiles.begin(),tiles.end(),ch);
@@ -348,13 +382,15 @@ vector<char> Board::peel(vector<char> letters) {
     return result;
 }
 
-void Board::print(ostream& out) const {
+void
+Board::print(ostream& out) const {
     if(0x04&output_options) print_machine(out);
     if(0x02&output_options) print_debug(out);
     if(0x01&output_options) print_std(out);
 }
 
-void Board::print_std(ostream& out) const {
+void
+Board::print_std(ostream& out) const {
     if(!empty()) {
         int from_row = first_nonempty_row();
         int to_row = last_nonempty_row();
@@ -370,7 +406,8 @@ void Board::print_std(ostream& out) const {
     out << "\n";
 }
 
-void Board::print_machine(ostream& out) const {
+void
+Board::print_machine(ostream& out) const {
     if(!empty()) {
         int from_row = first_nonempty_row();
         int to_row = last_nonempty_row();
@@ -387,7 +424,8 @@ void Board::print_machine(ostream& out) const {
     }
 }
 
-void Board::print_debug(ostream& out) const {
+void
+Board::print_debug(ostream& out) const {
     if(!empty()) {
         int from_row = first_nonempty_row();
         int to_row = last_nonempty_row();

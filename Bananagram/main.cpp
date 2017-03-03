@@ -36,6 +36,7 @@
 #include <vector>
 
 #include "simple_utils.h"
+#include "Clocker.h"
 #include "Dictionary.h"
 #include "Board.h"
 #include "Place.h"
@@ -218,6 +219,9 @@ int main(int argc,  char * const argv[]) {
     vector<const CharAtPos> uses;
     const Place start = Place(board.dim/2, board.dim/2, Place::Direction::horizontal);
     
+    Clocker clock;
+    cout << clock.readResetDetailed("NOTE: EXECUTION BEGINS ") << "\n\n";
+    
     for(string & word : top_words) {
         if(board.insert_word(word, start, uses)) {
             long long numunique = board.numunique;
@@ -225,7 +229,7 @@ int main(int argc,  char * const argv[]) {
             deque<const Coord> expand_from;
             for(auto cap : uses)
                 expand_from.push_back(cap.coord);
-            bool normal = board.newsolve(expand_from);
+            bool normal = board.newsolve(expand_from, top_words);
             describe_rslt(board, word, numunique, numresults);
             if(!normal || board.numunique >= board.max_results)
                 break;
@@ -243,7 +247,9 @@ int main(int argc,  char * const argv[]) {
     << "; #computed=" << board.numresults
     << "; #starts=" << numanswers
     << " for " << start_condition << endl;
- 
+    
+    cout << clock.readResetDetailed("NOTE: EXECUTION COMPLETE ") << endl;
+    
     return 0;
 }
 

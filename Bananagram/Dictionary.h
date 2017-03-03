@@ -11,12 +11,16 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 
 class Dictionary {
 public:
     bool plausible(const string&, const vector<int>&);
+    bool shared_ch(const string&, const unsigned int);
+    static /* inline */ unsigned int mkbinary(const vector<int>&);
+    static /* inline */ unsigned int charmask(const string&);
     
     void activate_word(string&);
     void activate_word(const string&);
@@ -69,14 +73,14 @@ public:
     
     //TODO: fully comply with iterator requirements
     class worditerator {
-        const vector<string>& words;
-        vector<string>::const_iterator it;
+        vector<string>& words;
+        vector<string>::iterator it;
         bool forward = true;
     public:
         const string begin();
         const string next();
         bool has_next();
-        worditerator(const vector<string>& w, bool dir=true) : words(w), forward(dir) {
+        worditerator(vector<string>& w, bool dir=true) : words(w), forward(dir) {
             it = forward?words.begin()-1:words.end();
         }
     };
