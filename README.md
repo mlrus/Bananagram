@@ -31,7 +31,7 @@ $ ./banana  -W cat,hat,hit,pat,sat,sit,vat -L SAITHAT -P
 $ ./banana -F ../TestData/shuffledWords -n 21
 ```
 
-## MacOS
+## OS-X
 ```
 $ git clone https://github.com/mlrus/Bananagram.git
 $ xcodebuild -project Bananagram.xcodeproj/ -alltargets
